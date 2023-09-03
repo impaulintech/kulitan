@@ -1,34 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Kulitan Transcribe
+# Description
 
-## Getting Started
+The "Kulitan Transcribe" app is a powerful and user-friendly tool designed to bridge language and culture by enabling users to translate text into the Kulitan script, primarily used for writing the Kapampangan language. This innovative app serves as a valuable resource for preserving and promoting the rich cultural heritage of Kapampangan-speaking communities.
 
-First, run the development server:
+## 🔗 Links
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Client :: 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Developers
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [@John](https://github.com/impaulintech) 
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Installation
 
-## Learn More
+- Setup frontend .env
+    - `cp client/.env.example client/.env.local`
+    - `cat client/.env.example client/.env.local`
 
-To learn more about Next.js, take a look at the following resources:
+## Key Features:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `Text Translation`: "Kulitan Transcribe" offers a straightforward and intuitive interface for users to input text in various languages and receive a translated version in the Kulitan script. This feature is invaluable for both Kapampangan speakers and learners.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+- `Kulitan Script Preservation`: The app plays a vital role in preserving and promoting the Kulitan script by making it accessible to a broader audience. It aids in revitalizing a script that holds deep historical and cultural significance.
 
-## Deploy on Vercel
+- `Customization`: Users have the flexibility to choose between different versions of the Kulitan script, adapting to regional variations and preferences.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `Educational Tool`: "Kulitan Transcribe" serves as an educational tool, facilitating the learning and understanding of the Kulitan script. It can be used by teachers, students, and language enthusiasts to explore and practice writing in Kulitan.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `Cultural Exchange`: The app fosters cultural exchange by enabling individuals from diverse backgrounds to appreciate and engage with the Kapampangan culture through its script.
+
+## Tech Stack
+
+**Client:** 
+- Next.js
+- TailwindCSS
+- TypeScript
+
+## Conclusion:
+
+The "Kulitan Transcribe" app is more than just a translation tool; it's a bridge that connects language, culture, and heritage. With its user-friendly interface and commitment to preserving the Kulitan script, this app is a valuable asset for anyone interested in the Kapampangan language and culture. It paves the way for a deeper understanding and appreciation of this unique script, opening doors to cultural exchange and education.
+
+## Appendix
+
+Any additional information goes here
