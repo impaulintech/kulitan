@@ -3,7 +3,7 @@ import { useState } from 'react';
 import kulitanizeWords from '@/utils/kulitanizeWords';
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('kapangpangan');
+  const [inputValue, setInputValue] = useState('agagagganggaanga');
 
   const handleChange = (e:any) => {
     setInputValue(e.target.value);
