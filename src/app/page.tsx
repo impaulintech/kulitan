@@ -20,7 +20,7 @@ export default function Home() {
         placeholder="Enter text"
         className='text-slate-900'
       />
-      <p>Result: {result}</p>
+      <p>Result: <span className='font-kulitan'>{result}</span></p>
     </main>
   );
 }
