@@ -1,4 +1,4 @@
-import library from "@/lib/generatedCombinations.json";
+import library from "@/shared/data/generatedCombinations.json";
 
 const kulitanizeWords = (userInput) => {
 	let result = [];
