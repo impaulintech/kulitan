@@ -1,26 +1,19 @@
 "use client";
-import { useState } from 'react';
-import kulitanizeWords from '@/utils/kulitanizeWords';
+import Link from "next/link";
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('agagagganggaanga');
-
-  const handleChange = (e:any) => {
-    setInputValue(e.target.value);
-  };
-
-  const result = kulitanizeWords(inputValue);
-
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-5 p-24">
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleChange}
-        placeholder="Enter text"
-        className='text-slate-900'
-      />
-      <p>Result: <span className='font-kulitan'>{result}</span></p>
-    </main>
-  );
+	return (
+		<main className="flex min-h-screen min-w-screen flex- items-start justify-start p-12">
+			<div className="header w-full">
+				<div className="flex-col flex-wrap max-w-[120px]">
+					<p className="text-xl font-medium shadow-font">KU LIT AN</p>
+					<p className="text-xl font-medium font-kulitan flex gap-2 items-center justify-between -mt-2 max-w-[96px]">
+						<span>KU</span>
+						<span>LIT</span>
+						<span>AN</span>
+					</p>
+				</div>
+			</div>
+		</main>
+	);
 }
