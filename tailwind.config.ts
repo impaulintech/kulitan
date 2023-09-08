@@ -9,11 +9,11 @@ const config: Config = {
 	theme: {
 		extend: {
 			colors: {
-				dark: "#500B0B",
+				dark: "#001C30",
 				disabled: "#949BA1",
 				white: "#FFFFFF",
 				blue: "#4391DA",
-				light: "#EAD9D3",
+				light: "#F8FAFC",
 				success: "#609876",
 				danger: "#9F3030",
 				warning: "#FFD700",
@@ -36,6 +36,7 @@ const config: Config = {
 					400: "#A69083",
 					500: "#857064",
 				},
+        card: "rgb(0,28,48,50%)",
 			},
 			fontFamily: {
 				kulitan: ["kulitan"],
@@ -44,16 +45,18 @@ const config: Config = {
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
 				"gradient-conic":
-					"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))", 
-        "gradient-container": "linear-gradient(180deg, #176B87 0%, #79E0EE 100%)",
+					"conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+				"gradient-container":
+					"linear-gradient(180deg, #176B87 0%, #79E0EE 100%)",
+				"kulitan-pattern": "url('./shared/images/transcribe-bg.png')",
 			},
-      borderRadius: {
-        "4xl": "2rem",
-      },
-      boxShadow: {
-        card: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-        font: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
-      },
+			borderRadius: {
+				"4xl": "2rem",
+			},
+			boxShadow: {
+				card: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+				font: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
+			},
 		},
 	},
 	plugins: [],
