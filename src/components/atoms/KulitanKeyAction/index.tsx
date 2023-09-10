@@ -11,38 +11,41 @@ type Props = {
 
 const KulitanKeyAction = (props: Props) => {
 	const { action, keyFunction } = props;
-	const [isHovered, setIsHovered] = useState(false);
+	const [isKeyClicked, setIsKeyClicked] = useState(false);
 
-	const onClickAction = (e: any) => {
+	const onMouseDown = () => {
+		setIsKeyClicked(true);
+	};
+
+	const onMouseUp = (e: any) => {
+		setIsKeyClicked(false);
+	};
+
+	const onClickAction = (e: any) => { 
 		keyFunction(action);
-	};
-	const handleMouseEnter = () => {
-		setIsHovered(true);
-	};
-
-	const handleMouseLeave = () => {
-		setIsHovered(false);
 	};
 
 	const actionComponentMap: any = {
-		delete: <DeleteAll isHovered={isHovered} />,
-		add: <Add isHovered={isHovered} />,
-		backSpace: <BackSpace isHovered={isHovered} />,
-		newLine: <NewLine isHovered={isHovered} />,
+		delete: <DeleteAll isHovered={isKeyClicked} />,
+		add: <Add isHovered={isKeyClicked} />,
+		backSpace: <BackSpace isHovered={isKeyClicked} />,
+		newLine: <NewLine isHovered={isKeyClicked} />,
 	};
 
 	return (
 		<div
 			onClick={onClickAction}
+			onMouseDown={onMouseDown}
+			onMouseUp={onMouseUp}
 			className="relative flex flex-col items-center justify-center"
 		>
 			<button
-				className="
+				className={`${
+					isKeyClicked && "bg-slate-900"
+				}
 					h-[57px] w-[74px] flex justify-center items-center text-dark font-bold 
-					text-[12px] relative z-50 hover:bg-slate-900 hover:text-light rounded-md
-				"
-				onMouseEnter={handleMouseEnter}
-				onMouseLeave={handleMouseLeave}
+					text-[12px] relative z-50 rounded-md
+				`}
 			>
 				{actionComponentMap[action] || null}
 			</button>
