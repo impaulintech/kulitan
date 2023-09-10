@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import { useEffect, useRef, useState } from "react";
 
@@ -44,7 +45,7 @@ export default function Transcribe() {
 
 	const handleClickOutside = (e: any) => {
 		if (textareaRef.current && !textareaRef.current.contains(e.target)) {
-			e.preventDefault(); // Prevent the default behavior of clicking on other elements
+			e.preventDefault(); 
 			textareaRef.current.focus();
 		}
 	};
@@ -78,7 +79,7 @@ export default function Transcribe() {
 					<TransparentCard>
 						<textarea
 							ref={textareaRef}
-							className="z-30 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
+							className="z-0 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
 							name="postContent"
 							spellCheck="false"
 							rows={3}
@@ -86,11 +87,11 @@ export default function Transcribe() {
 							onChange={normalWordChange}
 						/>
 					</TransparentCard>
-					<TransparentCard className="flex justify-end items-end resize-y">
+					<TransparentCard className="flex justify-end items-end">
 						<div
 							className="
 								flex flex-row-reverse justify-start items-start 
-								w-full gap-1 max-w-[350px] overflow-x-scroll px-2 min-h-[180px] h-full resize-y
+								w-full gap-1 overflow-x-scroll px-2 min-h-[180px] h-full
 							"
 						>
 							<div
@@ -110,7 +111,7 @@ export default function Transcribe() {
 					<div
 						className="
 							left-0 bottom-0 h-full w-full bg-gradient-container z-0
-							flex justify-center items-center mt-[30px]
+							flex justify-center items-center
 						"
 					></div>
 				</div>

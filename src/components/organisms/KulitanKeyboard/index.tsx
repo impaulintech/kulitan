@@ -105,8 +105,7 @@ const KulitanKeyboard = (props: Props) => {
 								? "bg-[rgba(255,255,255,90%)]"
 								: "bg-[rgba(217,217,217,30%)]"
 						} relative inline-flex h-4 w-10 items-center rounded-full`}
-					>
-						<span className="sr-only">Auto correct</span>
+					> 
 						<span
 							className={`${
 								enabled ? "translate-x-6" : "translate-x-1"

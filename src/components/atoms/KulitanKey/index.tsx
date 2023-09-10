@@ -26,6 +26,7 @@ const KulitanKey = (props: Props) => {
 	const [isKeyClicked, setIsKeyClicked] = useState(false);
 	const [isSubActive, setIsSubActive] = useState(mainKey);
 	const [isTimerId, setIsTimerId] = useState<any>(null);
+	let activeKey: any;
 
 	const startTimer = () => {
 		setIsTimerId(
@@ -58,71 +59,104 @@ const KulitanKey = (props: Props) => {
 		}
 	};
 
-	const onMouseDown = () => {
+	const onMouseDown = (e: any) => {
 		setIsKeyClicked(true);
 		startTimer();
+		activeKey = e.target.classList[0]; 
+		document.addEventListener("mouseup", onMouseUp);
 	};
 
-	const onMouseUp = (e: any) => {
+	const onMouseUp = (e: any) => { 
 		clearTimeout(isTimerId);
 		const x = e.clientX;
 		const y = e.clientY;
 		const hoveredElement: any = document.elementFromPoint(x, y);
+		
+		if (
+			!hoveredElement ||
+			!hoveredElement.classList.contains(`key-${subKeyOne}`)
+		) {
+			setIsSubHover(false);
+			setIsSubActive(mainKey);
+			setIsKeyClicked(false);
+			return;
+		}
+
+		if (!isKeyClicked) return;
+
 		handleButtonClick(hoveredElement.innerText);
 
 		setIsSubHover(false);
 		setIsSubActive(mainKey);
 		setIsKeyClicked(false);
+
+		document.removeEventListener("mouseup", onMouseUp);
 	};
 
 	return (
 		<div
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
-			className="relative flex flex-col items-center justify-center"
+			className={`key-${subKeyOne} relative flex flex-col items-center justify-center`}
 		>
 			<div
-				className={`${
-					isSubHover ? "flex" : "hidden"
-				} "mb-1 absolute z-40 -top-9 -mt-[100px]"`}
+				className={`
+					key-${subKeyOne}
+					${isSubHover ? "flex" : "hidden"} 
+					"mb-1 absolute z-50 -top-9 -mt-[100px]"
+				`}
 			>
 				<span
 					onMouseOver={() => setIsSubActive(subKeyOne)}
-					className={`${
-						isSubActive === subKeyOne ? "bg-slate-900" : "bg-slate-400"
-					} font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer`}
+					className={`
+						key-${subKeyOne}
+						${isSubActive === subKeyOne ? "bg-slate-900" : "bg-slate-400"} 
+						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+					`}
 				>
 					{subKeyOne}
 				</span>
 				<span
 					onMouseOver={() => setIsSubActive(subKeyTwo)}
-					className={`${
-						isSubActive === subKeyTwo ? "bg-slate-900" : "bg-slate-400"
-					}  font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer`}
+					className={`
+						key-${subKeyOne}
+						${isSubActive === subKeyTwo ? "bg-slate-900" : "bg-slate-400"}  
+						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+					`}
 				>
 					{subKeyTwo}
 				</span>
 				<span
 					onMouseOver={() => setIsSubActive(subKeyThree)}
-					className={`${
-						isSubActive === subKeyThree ? "bg-slate-900" : "bg-slate-400"
-					}  font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer`}
+					className={`
+						key-${subKeyOne}
+						${isSubActive === subKeyThree ? "bg-slate-900" : "bg-slate-400"}  
+						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+					`}
 				>
 					{subKeyThree}
 				</span>
 			</div>
 			<button
-				className={`${
-					isKeyClicked && "bg-slate-900"
-				} font-kulitan h-[57px] w-[74px] flex justify-center items-center text-light text-[42px] relative rounded-sm`}
+				className={`
+					key-${subKeyOne}
+					${isKeyClicked && "bg-slate-900"} 
+					font-kulitan h-[57px] w-[74px] flex justify-center items-center text-light text-[42px] relative rounded-sm
+				`}
 			>
 				{hasSub === true ? (
 					<>
-						<span className="absolute top-0 bottom-0">{subKeyOne}</span>
-						<span className="absolute top-0 bottom-0 z-30 w-full">
+						<span className={`key-${subKeyOne} absolute top-0 bottom-0`}>
+							{subKeyOne}
+						</span>
+						<span
+							className={`key-${subKeyOne} absolute top-0 bottom-0 z-30 w-full`}
+						>
 							{mainKey === "wa" ? subKeyOne : mainKey}
 						</span>
-						<span className="absolute top-0 bottom-0">{subKeyThree}</span>
+						<span className={`key-${subKeyOne} absolute top-0 bottom-0`}>
+							{subKeyThree}
+						</span>
 					</>
 				) : (
 					mainKey
