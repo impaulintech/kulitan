@@ -1,14 +1,12 @@
 "use client";
-import Link from "next/link";
 import Image from "next/image";
-import KapampanganFont from "@/shared/images/kapampangan-font.png";
 
-import Card from "@/components/templates/Card";
-import { Kapampangan } from "@/shared/icons/Kapampangan";
+import Card from "@/components/templates/Card"; 
+import KapampanganFont from "@/shared/images/kapampangan-font.png";
 
 export default function Home() {
 	return (
-		<main className="min-h-screen min-w-screen flex flex-col items-start justify-start p-12 gap-12">
+		<main className="min-h-screen min-w-screen flex flex-col items-start justify-start p-9 max-miniPhone:p-5 gap-12">
 			<div className="w-full">
 				<div className="flex-col flex-wrap max-w-[120px]">
 					<p className="text-xl font-medium text-shadow">KU LIT AN</p>

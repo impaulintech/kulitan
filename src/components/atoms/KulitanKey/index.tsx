@@ -1,5 +1,6 @@
-import { useKulitanContext } from "@/context/kulitan-context";
 import React, { useEffect, useState } from "react";
+import { useKulitanContext } from "@/context/kulitan-context";
+import denormalizeWords from "@/utils/denormalizeWords";
 
 type Props = {
 	mainKey?: string;
@@ -7,23 +8,54 @@ type Props = {
 	subKeyTwo?: string;
 	subKeyThree?: string;
 	hasSub?: boolean;
+	textareaRef: any;
 };
 
 const KulitanKey = (props: Props) => {
-	const { mainKey, subKeyOne, subKeyTwo, subKeyThree, hasSub = true } = props;
+	const {
+		mainKey,
+		subKeyOne,
+		subKeyTwo,
+		subKeyThree,
+		hasSub = true,
+		textareaRef,
+	} = props;
 	const { kulitanWords, setKulitanWords } = useKulitanContext();
 
 	const [isSubHover, setIsSubHover] = useState(false);
 	const [isKeyClicked, setIsKeyClicked] = useState(false);
 	const [isSubActive, setIsSubActive] = useState(mainKey);
 	const [isTimerId, setIsTimerId] = useState<any>(null);
-	
+
 	const startTimer = () => {
 		setIsTimerId(
 			setTimeout(() => {
 				setIsSubHover(true);
 			}, 300),
 		);
+	};
+
+	const handleButtonClick = (buttonContent: any) => {
+		if (textareaRef.current) {
+			const cursorPosition = textareaRef.current.selectionStart;
+			const currentText = textareaRef.current.value;
+			const buttonContentValue = buttonContent + "<br>";
+
+			const newText =
+				currentText.slice(0, cursorPosition) +
+				buttonContentValue +
+				currentText.slice(cursorPosition);
+
+			const newCursorPosition = cursorPosition + buttonContent.length;
+
+			textareaRef.current.value = newText;
+			textareaRef.current.setSelectionRange(
+				newCursorPosition,
+				newCursorPosition,
+			);
+
+			setKulitanWords(denormalizeWords(newText));
+		}
 	};
 
 	const onMouseDown = () => {
@@ -36,7 +68,8 @@ const KulitanKey = (props: Props) => {
 		const x = e.clientX;
 		const y = e.clientY;
 		const hoveredElement: any = document.elementFromPoint(x, y);
-		console.log(hoveredElement.innerText);
+		handleButtonClick(hoveredElement.innerText);
+
 		setIsSubHover(false);
 		setIsSubActive(mainKey);
 		setIsKeyClicked(false);

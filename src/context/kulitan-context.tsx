@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from "react";
 const KulitanContext = createContext<any>(null);
 
 const KulitanContextProvider = ({ children }: any) => {
-	const [kulitanWords, setKulitanWords] = useState("Ka pang pang an");
+	const [kulitanWords, setKulitanWords] = useState("Ka pang pang an ");
 	
 	return (
 		<KulitanContext.Provider value={{ kulitanWords, setKulitanWords }}>

@@ -8,6 +8,8 @@ import TransparentCard from "@/components/templates/TransparentCard";
 import KulitanKeyboard from "@/components/organisms/KulitanKeyboard";
 import Link from "next/link";
 import { useKulitanContext } from "@/context/kulitan-context";
+import denormalizeWords from "@/utils/denormalizeWords";
+import normalizeWords from "@/utils/normalizeWords";
 
 export default function Transcribe() {
 	const { kulitanWords, setKulitanWords } = useKulitanContext();
@@ -29,23 +31,6 @@ export default function Transcribe() {
 		};
 	})();
 
-	const denormalizeWords = (newValue: any) => {
-		return JSON.parse(JSON.stringify(newValue).replace(/\s/g, "<br>"))
-			.split("\n")
-			.map((element: any, index: number) =>
-				index === 0 ? element : `<div>${element}</div>`,
-			)
-			.join("");
-	};
-
-	const normalizeWords = (newValue: any) => {
-		return newValue
-			.replace(/<br>/g, " ")
-			.replace(/<div>/g, "\n")
-			.replace(/<\/div>/g, "")
-			.trim();
-	};
-
 	const normalWordChange = (e: any) => {
 		const newValue = e.target.value;
 		const convertToHTMLTags = denormalizeWords(newValue);
@@ -57,12 +42,26 @@ export default function Transcribe() {
 		// setKulitanWords(newValue);
 	};
 
+	const handleClickOutside = (e: any) => {
+		if (textareaRef.current && !textareaRef.current.contains(e.target)) {
+			e.preventDefault(); // Prevent the default behavior of clicking on other elements
+			textareaRef.current.focus();
+		}
+	};
+
 	useEffect(() => {
+		kulitanWords.length === 0 && setKulitanWords("ka pang pang an");
+		
 		if (textareaRef.current) {
 			textareaRef.current.focus();
 			const textLength = textareaRef.current.value.length;
 			textareaRef.current.setSelectionRange(textLength, textLength);
 		}
+		document.addEventListener("mousedown", handleClickOutside);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
 	}, []);
 
 	return (
@@ -75,20 +74,19 @@ export default function Transcribe() {
 					</Link>
 					<p className="font-kulitan text-[20px] z-10">i lu lin</p>
 				</div>
-				<div className="flex gap-3 flex-wrap justify-center items-start">
+				<div className="flex gap-3 flex-wrap justify-center items-start px-5">
 					<TransparentCard>
 						<textarea
 							ref={textareaRef}
-							className="z-30 text-light bg-transparent resize-y w-full min-w-[350px] max-w-[350px] min-h-[96px] outline-0"
+							className="z-30 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
 							name="postContent"
 							spellCheck="false"
 							rows={3}
-							cols={40}
-							defaultValue={kulitanWords}
+							value={normalizeWords(kulitanWords)}
 							onChange={normalWordChange}
 						/>
 					</TransparentCard>
-					<TransparentCard className="flex justify-end items-end">
+					<TransparentCard className="flex justify-end items-end resize-y">
 						<div
 							className="
 								flex flex-row-reverse justify-start items-start 
@@ -98,7 +96,6 @@ export default function Transcribe() {
 							<div
 								onInput={kulitanWordChange}
 								className="kulitan-class text-white text-[21px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
-								contentEditable="false"
 								spellCheck="false"
 								dangerouslySetInnerHTML={{
 									__html: kulitanWords.replace(/\s/g, "<br>"),
@@ -112,12 +109,12 @@ export default function Transcribe() {
 				<div className="absolute left-0 bottom-0 h-full w-full z-0">
 					<div
 						className="
-							left-0 bottom-0 min-h-[275px] min-w-[414px] w-full bg-gradient-container z-0
+							left-0 bottom-0 h-full w-full bg-gradient-container z-0
 							flex justify-center items-center mt-[30px]
 						"
 					></div>
 				</div>
-				<KulitanKeyboard>
+				<KulitanKeyboard textareaRef={textareaRef}>
 					{kulitanKeys.map((key, index) => {
 						const { mainKey, subKeyOne, subKeyTwo, subKeyThree } = key;
 						return (
@@ -128,6 +125,7 @@ export default function Transcribe() {
 								subKeyTwo={subKeyTwo}
 								subKeyThree={subKeyThree}
 								hasSub={subKeyOne ? true : false}
+								textareaRef={textareaRef}
 							/>
 						);
 					})}

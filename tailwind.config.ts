@@ -8,6 +8,12 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			screens: {
+				miniPhone: "400px",
+				tablet: "640px",
+				laptop: "1024px",
+				desktop: "1280px",
+			},
 			colors: {
 				dark: "#001C30",
 				disabled: "#949BA1",
@@ -36,7 +42,7 @@ const config: Config = {
 					400: "#A69083",
 					500: "#857064",
 				},
-        card: "rgb(0,28,48,50%)",
+				card: "rgb(0,28,48,50%)",
 			},
 			fontFamily: {
 				kulitan: ["kulitan"],
