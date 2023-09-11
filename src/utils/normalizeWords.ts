@@ -1,6 +1,6 @@
-const normalizeWords = (newValue: any) => {
+const normalizeWords = (newValue: any, spaceValue: any = " ") => {
 	return newValue
-		.replace(/<br>/g, " ")
+		.replace(/<br>/g, spaceValue)
 		.replace(/<div>/g, "\n")
 		.replace(/<\/div>/g, "");
 };

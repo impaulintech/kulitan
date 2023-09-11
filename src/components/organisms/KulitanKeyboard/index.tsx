@@ -13,7 +13,12 @@ type Props = {
 const KulitanKeyboard = (props: Props) => {
 	const { children, textareaRef } = props;
 
-	const { kulitanWords, setKulitanWords } = useKulitanContext();
+	const {
+		kulitanWords,
+		setKulitanWords,
+		isAddActionClicked,
+		setIsAddActionClicked,
+	} = useKulitanContext();
 	const [enabled, setEnabled] = useState(false);
 	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
 
@@ -22,6 +27,8 @@ const KulitanKeyboard = (props: Props) => {
 	};
 
 	const addAction = () => {
+		if (isAddActionClicked) return;
+		setIsAddActionClicked(true);
 		if (textareaRef.current) {
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
@@ -105,7 +112,7 @@ const KulitanKeyboard = (props: Props) => {
 								? "bg-[rgba(255,255,255,90%)]"
 								: "bg-[rgba(217,217,217,30%)]"
 						} relative inline-flex h-4 w-10 items-center rounded-full`}
-					> 
+					>
 						<span
 							className={`${
 								enabled ? "translate-x-6" : "translate-x-1"

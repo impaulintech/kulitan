@@ -20,7 +20,8 @@ const KulitanKey = (props: Props) => {
 		hasSub = true,
 		textareaRef,
 	} = props;
-	const { kulitanWords, setKulitanWords } = useKulitanContext();
+	const { kulitanWords, setKulitanWords, setIsAddActionClicked } =
+		useKulitanContext();
 
 	const [isSubHover, setIsSubHover] = useState(false);
 	const [isKeyClicked, setIsKeyClicked] = useState(false);
@@ -38,6 +39,7 @@ const KulitanKey = (props: Props) => {
 
 	const handleButtonClick = (buttonContent: any) => {
 		if (textareaRef.current) {
+			setIsAddActionClicked(false);
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
 			const buttonContentValue = buttonContent + "<br>";
@@ -47,31 +49,34 @@ const KulitanKey = (props: Props) => {
 				buttonContentValue +
 				currentText.slice(cursorPosition);
 
-			const newCursorPosition = cursorPosition + buttonContent.length;
+			const newCursorPosition = cursorPosition + (buttonContent.length + 1);
 
 			textareaRef.current.value = newText;
-			textareaRef.current.setSelectionRange(
-				newCursorPosition,
-				newCursorPosition,
-			);
-
 			setKulitanWords(denormalizeWords(newText));
+
+			// Set the cursor position explicitly after updating the textarea
+			setTimeout(() => {
+				textareaRef.current.setSelectionRange(
+					newCursorPosition,
+					newCursorPosition,
+				);
+			}, 1);
 		}
 	};
 
 	const onMouseDown = (e: any) => {
 		setIsKeyClicked(true);
 		startTimer();
-		activeKey = e.target.classList[0]; 
+		activeKey = e.target.classList[0];
 		document.addEventListener("mouseup", onMouseUp);
 	};
 
-	const onMouseUp = (e: any) => { 
+	const onMouseUp = (e: any) => {
 		clearTimeout(isTimerId);
 		const x = e.clientX;
 		const y = e.clientY;
 		const hoveredElement: any = document.elementFromPoint(x, y);
-		
+
 		if (
 			!hoveredElement ||
 			!hoveredElement.classList.contains(`key-${subKeyOne}`)
@@ -150,9 +155,13 @@ const KulitanKey = (props: Props) => {
 							{subKeyOne}
 						</span>
 						<span
-							className={`key-${subKeyOne} absolute top-0 bottom-0 z-30 w-full`}
+							className={`
+								key-${subKeyOne} 
+								${mainKey === "wa" && "opacity-0"} 
+								absolute top-0 bottom-0 z-30 w-full
+							`}
 						>
-							{mainKey === "wa" ? subKeyOne : mainKey}
+							{mainKey}
 						</span>
 						<span className={`key-${subKeyOne} absolute top-0 bottom-0`}>
 							{subKeyThree}

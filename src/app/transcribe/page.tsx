@@ -11,9 +11,11 @@ import Link from "next/link";
 import { useKulitanContext } from "@/context/kulitan-context";
 import denormalizeWords from "@/utils/denormalizeWords";
 import normalizeWords from "@/utils/normalizeWords";
+import delatinizeVowels from "@/utils/delatinizeVowels";
 
 export default function Transcribe() {
-	const { kulitanWords, setKulitanWords } = useKulitanContext();
+	const { kulitanWords, setKulitanWords, cursorPosition, setCursorPosition } =
+		useKulitanContext();
 	const textareaRef: any = useRef(null);
 
 	const getWordElements: any = (() => {
@@ -45,21 +47,24 @@ export default function Transcribe() {
 
 	const handleClickOutside = (e: any) => {
 		if (textareaRef.current && !textareaRef.current.contains(e.target)) {
-			e.preventDefault(); 
+			e.preventDefault();
 			textareaRef.current.focus();
 		}
 	};
 
 	useEffect(() => {
-		kulitanWords.length === 0 && setKulitanWords("ka pang pang an");
-		
+		kulitanWords.length === 0 &&
+			setKulitanWords(
+				"a tin ku pung sing sing <div>la wii wiing pam bang saa </div>",
+			);
+
 		if (textareaRef.current) {
 			textareaRef.current.focus();
 			const textLength = textareaRef.current.value.length;
 			textareaRef.current.setSelectionRange(textLength, textLength);
 		}
-		document.addEventListener("mousedown", handleClickOutside);
 
+		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
@@ -99,7 +104,7 @@ export default function Transcribe() {
 								className="kulitan-class text-white text-[21px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
 								spellCheck="false"
 								dangerouslySetInnerHTML={{
-									__html: kulitanWords.replace(/\s/g, "<br>"),
+									__html: delatinizeVowels(kulitanWords.replace(/\s/g, "<br>")),
 								}}
 							></div>
 						</div>
