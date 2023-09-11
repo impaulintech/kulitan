@@ -18,8 +18,9 @@ const KulitanKeyboard = (props: Props) => {
 		setKulitanWords,
 		isAddActionClicked,
 		setIsAddActionClicked,
+		isAutoCorrect,
+		setIsAutoCorrect,
 	} = useKulitanContext();
-	const [enabled, setEnabled] = useState(false);
 	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
 
 	const deleteAction = () => {
@@ -51,8 +52,9 @@ const KulitanKeyboard = (props: Props) => {
 			const newText = newLeftString + currentText.slice(cursorPosition);
 
 			const newPosition = newLeftString.length;
-
-			textareaRef.current.setSelectionRange(newPosition, newPosition);
+			setTimeout(() => {
+				textareaRef.current.setSelectionRange(newPosition - 1, newPosition - 1);
+			}, 1);
 
 			setKulitanWords(denormalizeWords(newText));
 		}
@@ -91,10 +93,12 @@ const KulitanKeyboard = (props: Props) => {
 				"</div>";
 
 			textareaRef.current.value = newText;
-			textareaRef.current.setSelectionRange(
-				cursorPosition + 1,
-				cursorPosition + 1,
-			);
+			setTimeout(() => {
+				textareaRef.current.setSelectionRange(
+					cursorPosition + 1,
+					cursorPosition + 1,
+				);
+			}, 1);
 
 			setKulitanWords(denormalizeWords(newText));
 		}
@@ -105,17 +109,17 @@ const KulitanKeyboard = (props: Props) => {
 			<div className="h-[30px] bg-dark w-full bottom-[275px] z-30 flex gap-2 justify-between items-center pl-6">
 				<div className="flex gap-2">
 					<Switch
-						checked={enabled}
-						onChange={setEnabled}
+						checked={isAutoCorrect}
+						onChange={setIsAutoCorrect}
 						className={`${
-							enabled
+							isAutoCorrect
 								? "bg-[rgba(255,255,255,90%)]"
 								: "bg-[rgba(217,217,217,30%)]"
 						} relative inline-flex h-4 w-10 items-center rounded-full`}
 					>
 						<span
 							className={`${
-								enabled ? "translate-x-6" : "translate-x-1"
+								isAutoCorrect ? "translate-x-6" : "translate-x-1"
 							} inline-block h-3 w-3 transform rounded-full bg-[#57BB47] transition`}
 						/>
 					</Switch>
@@ -136,7 +140,7 @@ const KulitanKeyboard = (props: Props) => {
                 `}
 			>
 				<div className="flex justify-start items-start max-w-[414px]">
-					<div className="flex flex-wrap justify-start max-miniPhone:justify-center items-start gap-2 pl-2 min-miniPhone:h-[275px]">
+					<div className="flex flex-wrap justify-center items-start gap-2 pl-2 min-miniPhone:h-[275px]">
 						{children}
 					</div>
 					<div className="w-[74px] h-[275px] pr-2 z-50 flex flex-col gap-2">

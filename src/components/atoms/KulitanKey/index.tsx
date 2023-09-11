@@ -157,7 +157,6 @@ const KulitanKey = (props: Props) => {
 						<span
 							className={`
 								key-${subKeyOne} 
-								${mainKey === "wa" && "opacity-0"} 
 								absolute top-0 bottom-0 z-30 w-full
 							`}
 						>

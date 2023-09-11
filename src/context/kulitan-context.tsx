@@ -1,23 +1,68 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import latinizeVowels from "@/utils/latinizeVowels";
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+	createContext,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
+import kulitanizeWords from "@/utils/kulitanizeWords";
+import kulitanLibrary from "@/shared/lib/kulitanLibrary.json";
+import normalizeWords from "@/utils/normalizeWords";
+import denormalizeWords from "@/utils/denormalizeWords";
 
 const KulitanContext = createContext<any>(null);
 
 const KulitanContextProvider = ({ children }: any) => {
+	const [isAutoCorrect, setIsAutoCorrect] = useState(false);
 	const [isAddActionClicked, setIsAddActionClicked] = useState(false);
+	const [cursorPosition, setCursorPosition] = useState(null);
 	const [kulitanWords, setKulitanWords] = useTransformedState(
-		"a tin ku pung sing sing <div>la wii wiing pam bang saa </div>",
-		latinizeVowels,
+		"kapampangan kulitan</div>",
 	);
+	const textareaRef: any = useRef(null);
 
-	function useTransformedState(initialValue: any, transformer: any) {
-		const [value, setValue] = useState(initialValue);
+	function replaceMatchingKeys(inputString: any, kulitanLibrary: any) {
+		let result = inputString;
 
-		const transformedValue = transformer(value);
+		for (const key of Object.keys(kulitanLibrary)) {
+			if (inputString.includes(key)) {
+				result = result.replace(new RegExp(key, "g"), kulitanLibrary[key]);
+			}
+		}
 
-		return [transformedValue, setValue];
+		return result;
+	}
+
+	function useTransformedState(initialValue: any) {
+		const [transformedValue, setTransformedValue] = useState(initialValue);
+
+		useEffect(() => {
+			const normalizedWords = normalizeWords(transformedValue);
+
+			if (!isAutoCorrect) {
+				setTransformedValue(denormalizeWords(latinizeVowels(normalizedWords)));
+				return;
+			}
+			const replacedMatchingWords = replaceMatchingKeys(
+				normalizedWords,
+				kulitanLibrary,
+			);
+
+			setTransformedValue(
+				denormalizeWords(latinizeVowels(replacedMatchingWords)),
+			);
+
+			if (textareaRef.current && cursorPosition !== null) {
+				const newPosition =
+					cursorPosition + (transformedValue.length - normalizedWords.length);
+				textareaRef.current.setSelectionRange(newPosition, newPosition);
+			} 
+		}, [initialValue, transformedValue, kulitanLibrary, isAutoCorrect]);
+		console.log(transformedValue);
+		return [transformedValue, setTransformedValue];
 	}
 
 	return (
@@ -27,6 +72,11 @@ const KulitanContextProvider = ({ children }: any) => {
 				setKulitanWords,
 				isAddActionClicked,
 				setIsAddActionClicked,
+				isAutoCorrect,
+				cursorPosition,
+				setCursorPosition,
+				setIsAutoCorrect,
+				textareaRef,
 			}}
 		>
 			{children}

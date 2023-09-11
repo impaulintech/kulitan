@@ -2,33 +2,36 @@ import library from "@/shared/data/generatedCombinations.json";
 import normalizeWords from "./normalizeWords";
 
 const kulitanizeWords = (userInput) => {
-	userInput = normalizeWords(userInput, "") 
-	console.log(userInput);
-	let result = [];
-	let i = 0;
+	const libraryKeys = Object.keys(library).slice(0, 6);
+	userInput = normalizeWords(userInput, "");
+	const lines = userInput.split("\n");
+	const result = [];
 
-	const getLibraryKeys = (() => {
-		return Object.keys(library);
-	})().slice(0, 6);
-	
-	while (i < userInput.length) {
-		for (let j = 0; j <= 5; j++) {
-			const currentWord = userInput.substring(i, i + (j + 1));
-
-			if (library[getLibraryKeys[j]]?.includes(currentWord)) {
-				result.push(currentWord);
-				i += currentWord.length;
-			} else {
-				result.push(userInput[i]);
-				i++;
+	for (let line of lines) {
+		let i = 0;
+		const lineResult = [];
+		line = line.replace(/\s+/g, "");
+		
+		while (i < line.length) {
+			for (let j = 0; j <= 5; j++) {
+				const currentWord = line.substring(i, i + (j + 1));
+				
+				if (library[libraryKeys[j]]?.includes(currentWord)) {
+					lineResult.push(currentWord + " ");
+					i += currentWord.length;
+				} else {
+					lineResult.push(line[i] + " ");
+					i++;
+				}
 			}
 		}
-	}
-	result = result.filter((item) => item !== undefined)
 
-	console.log(result);
-	console.log(result.join());
-	return result.join("<br>");
+		result.push(lineResult.filter((item) => item !== "undefined ").join(""));
+	}
+
+	return result
+		.map((line, index) => (index > 0 ? `<div>${line}</div>` : line))
+		.join("");
 };
 
 export default kulitanizeWords;
