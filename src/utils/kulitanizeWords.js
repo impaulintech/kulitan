@@ -1,9 +1,7 @@
 import library from "@/shared/data/generatedCombinations.json";
-import normalizeWords from "./normalizeWords";
 
 const kulitanizeWords = (userInput) => {
 	const libraryKeys = Object.keys(library).slice(0, 6);
-	userInput = normalizeWords(userInput, "");
 	const lines = userInput.split("\n");
 	const result = [];
 
@@ -29,9 +27,7 @@ const kulitanizeWords = (userInput) => {
 		result.push(lineResult.filter((item) => item !== "undefined ").join(""));
 	}
 
-	return result
-		.map((line, index) => (index > 0 ? `<div>${line}</div>` : line))
-		.join("");
+	return result.join(" ");
 };
 
 export default kulitanizeWords;

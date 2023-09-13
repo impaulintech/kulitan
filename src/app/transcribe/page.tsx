@@ -12,11 +12,14 @@ import { useKulitanContext } from "@/context/kulitan-context";
 import denormalizeWords from "@/utils/denormalizeWords";
 import normalizeWords from "@/utils/normalizeWords";
 import delatinizeVowels from "@/utils/delatinizeVowels";
+import AutoFormatUserInput from "@/utils/useAutoFormatUserInput";
+import autoFormatUserInput from "@/utils/useAutoFormatUserInput";
+import getWordAtCursor from "@/utils/getWordAtCursor";
 
 export default function Transcribe() {
-	const { kulitanWords, setKulitanWords, cursorPosition, setCursorPosition } =
-		useKulitanContext();
+	const { kulitanWords, setKulitanWords, isAutoCorrect } = useKulitanContext();
 	const textareaRef: any = useRef(null);
+	const [isAutoFormatKeyClicked, setIsAutoFormatKeyClicked] = useState(false);
 
 	const getWordElements: any = (() => {
 		if (typeof document === "undefined") {
@@ -38,6 +41,17 @@ export default function Transcribe() {
 		const newValue = e.target.value;
 		const convertToHTMLTags = denormalizeWords(newValue);
 		setKulitanWords(convertToHTMLTags);
+		if (
+			(e.key === "Backspace" && e.keyCode === 8) ||
+			(e.key === "Delete" && e.keyCode === 46)
+		) {
+			setIsAutoFormatKeyClicked(true);
+			return;
+		} else {
+			console.log(newValue);
+			autoFormatUserInput(newValue, setKulitanWords, isAutoCorrect, e);
+			setIsAutoFormatKeyClicked(false);
+		}
 	};
 
 	const kulitanWordChange = () => {
@@ -46,10 +60,17 @@ export default function Transcribe() {
 	};
 
 	const handleClickOutside = (e: any) => {
+		setIsAutoFormatKeyClicked(true);
 		if (textareaRef.current && !textareaRef.current.contains(e.target)) {
 			e.preventDefault();
 			textareaRef.current.focus();
 		}
+	};
+
+	const trackCursor = (e: any) => { 
+		const textarea = textareaRef.current;
+		if (!textarea) return; 
+		console.log(getWordAtCursor(textarea));
 	};
 
 	useEffect(() => {
@@ -90,6 +111,7 @@ export default function Transcribe() {
 							rows={3}
 							value={normalizeWords(kulitanWords)}
 							onChange={normalWordChange}
+							onClick={trackCursor}
 						/>
 					</TransparentCard>
 					<TransparentCard className="flex justify-end items-end">

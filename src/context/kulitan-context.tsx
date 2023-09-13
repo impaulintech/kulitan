@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
-import latinizeVowels from "@/utils/latinizeVowels";
 import React, {
 	createContext,
 	useContext,
@@ -8,10 +7,10 @@ import React, {
 	useRef,
 	useState,
 } from "react";
-import kulitanizeWords from "@/utils/kulitanizeWords";
-import kulitanLibrary from "@/shared/lib/kulitanLibrary.json";
 import normalizeWords from "@/utils/normalizeWords";
 import denormalizeWords from "@/utils/denormalizeWords";
+import latinizeVowels from "@/utils/latinizeVowels";
+import autoFormatUserInput from "@/utils/useAutoFormatUserInput";
 
 const KulitanContext = createContext<any>(null);
 
@@ -20,48 +19,38 @@ const KulitanContextProvider = ({ children }: any) => {
 	const [isAddActionClicked, setIsAddActionClicked] = useState(false);
 	const [cursorPosition, setCursorPosition] = useState(null);
 	const [kulitanWords, setKulitanWords] = useTransformedState(
-		"kapampangan kulitan</div>",
+		"kapampangan",
 	);
 	const textareaRef: any = useRef(null);
 
-	function replaceMatchingKeys(inputString: any, kulitanLibrary: any) {
-		let result = inputString;
-
-		for (const key of Object.keys(kulitanLibrary)) {
-			if (inputString.includes(key)) {
-				result = result.replace(new RegExp(key, "g"), kulitanLibrary[key]);
-			}
-		}
-
-		return result;
-	}
-
 	function useTransformedState(initialValue: any) {
 		const [transformedValue, setTransformedValue] = useState(initialValue);
+		const normalizedWords = normalizeWords(transformedValue);
 
 		useEffect(() => {
-			const normalizedWords = normalizeWords(transformedValue);
+			setKulitanWords(denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase());
+		}, []);
 
+		useEffect(() => {
+			if (!isAutoCorrect) return;
+			autoFormatUserInput(kulitanWords, setKulitanWords, isAutoCorrect);
+		}, [isAutoCorrect]);
+
+		useEffect(() => {
 			if (!isAutoCorrect) {
-				setTransformedValue(denormalizeWords(latinizeVowels(normalizedWords)));
-				return;
+				return setKulitanWords(
+					denormalizeWords(latinizeVowels(normalizedWords).toLowerCase()),
+				);
 			}
-			const replacedMatchingWords = replaceMatchingKeys(
-				normalizedWords,
-				kulitanLibrary,
-			);
 
-			setTransformedValue(
-				denormalizeWords(latinizeVowels(replacedMatchingWords)),
-			);
-
+			// Position the cursor to the latest position
 			if (textareaRef.current && cursorPosition !== null) {
 				const newPosition =
 					cursorPosition + (transformedValue.length - normalizedWords.length);
 				textareaRef.current.setSelectionRange(newPosition, newPosition);
-			} 
-		}, [initialValue, transformedValue, kulitanLibrary, isAutoCorrect]);
-		console.log(transformedValue);
+			}
+		}, [transformedValue, isAutoCorrect]);
+
 		return [transformedValue, setTransformedValue];
 	}
 
