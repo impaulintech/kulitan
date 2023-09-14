@@ -22,6 +22,7 @@ export default function Transcribe() {
 		isAutoCorrect,
 		setCursorPosition,
 		setTextAreaRef,
+		kulitanLibrary
 	} = useKulitanContext();
 	const textareaRef: any = useRef(null);
 	const lastClickPositionRef = useRef(null);
@@ -69,6 +70,7 @@ export default function Transcribe() {
 						newValue,
 						setKulitanWords,
 						isAutoCorrect,
+						kulitanLibrary,
 						e,
 					);
 					setCursorPosition(
@@ -109,7 +111,8 @@ export default function Transcribe() {
 				activeWordInCursor,
 				newValue,
 				setKulitanWords,
-				isAutoCorrect,
+				isAutoCorrect, 
+				kulitanLibrary,
 				e,
 			);
 		}

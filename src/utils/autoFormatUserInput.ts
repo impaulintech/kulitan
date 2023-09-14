@@ -1,6 +1,5 @@
 import { useKulitanContext } from "@/context/kulitan-context";
 import kulitanizeWords from "@/utils/kulitanizeWords";
-import kulitanLibrary from "@/shared/lib/kulitanLibrary.json";
 import normalizeWords from "@/utils/normalizeWords";
 import denormalizeWords from "@/utils/denormalizeWords";
 import correctInput from "@/utils/correctInput";
@@ -12,6 +11,7 @@ export default function autoFormatUserInput(
 	kulitanWords: any,
 	setKulitanWords: any,
 	isAutoCorrect: boolean,
+	kulitanLibrary: any,
 	e?: any,
 ) {
 	const invalidLetters = ["x", "h"];

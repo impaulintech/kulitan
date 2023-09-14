@@ -10,7 +10,7 @@ import React, {
 import normalizeWords from "@/utils/normalizeWords";
 import denormalizeWords from "@/utils/denormalizeWords";
 import latinizeVowels from "@/utils/latinizeVowels";
-import autoFormatUserInput from "@/utils/autoFormatUserInput";
+import localKulitanLibrary from "@/shared/lib/kulitanLibrary.json";
 
 const KulitanContext = createContext<any>(null);
 
@@ -23,12 +23,25 @@ const KulitanContextProvider = ({ children }: any) => {
 		"a tin ku pung sing sing <div>la wii wiing pam bang saa </div>",
 	);
 	const textareaRef: any = useRef(null);
+	const [kulitanLibrary, setKulitanLibrary] =
+		useState<any>(localKulitanLibrary);
 
 	function useTransformedState(initialValue: any) {
 		const [transformedValue, setTransformedValue] = useState(initialValue);
 		const normalizedWords = normalizeWords(transformedValue);
 
 		useEffect(() => {
+			const path = process.env.NEXT_PUBLIC_BACKEND_URL;
+			const options = {
+				method: "GET",
+				headers: { "Allow-Access-Origin": "*" },
+			};
+			
+			fetch(path + "/kulitanLibrary.json", options)
+				.then((response) => response.json())
+				.then((response) => setKulitanLibrary(response))
+				.catch((err) => setKulitanLibrary(localKulitanLibrary));
+
 			setKulitanWords(
 				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
 			);
@@ -62,6 +75,7 @@ const KulitanContextProvider = ({ children }: any) => {
 				textareaRef,
 				textAreaRef,
 				setTextAreaRef,
+				kulitanLibrary,
 			}}
 		>
 			{children}

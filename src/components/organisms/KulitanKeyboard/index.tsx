@@ -6,6 +6,7 @@ import denormalizeWords from "@/utils/denormalizeWords";
 import { Switch } from "@headlessui/react";
 import React, { useState } from "react";
 import html2canvas from "html2canvas";
+import { Download } from "@/shared/icons/Download";
 
 type Props = {
 	children: any;
@@ -134,6 +135,38 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
+	const captureOverflowDivAsImage = async () => {
+		const divToCapture: any = document.querySelector(".copy-div-element");
+
+		if (!divToCapture) {
+			console.error("Element not found.");
+			return;
+		}
+
+		divToCapture.scrollTop = divToCapture.scrollHeight;
+
+		try {
+			const canvas = await html2canvas(divToCapture, {
+				scrollX: 0,
+				scrollY: -window.scrollY,
+			});
+
+			const dataURL = canvas.toDataURL("image/png");
+
+			const link = document.createElement("a");
+			link.href = dataURL;
+			link.download = "captured_image.png";
+			link.click();
+
+			console.log("Overflow content saved as image.");
+		} catch (error) {
+			console.error(
+				"Error capturing and saving overflow content as image:",
+				error,
+			);
+		}
+	};
+
 	return (
 		<div className="sticky w-full h-full">
 			<div className="h-[30px] bg-dark w-full bottom-[275px] z-30 flex gap-2 justify-between items-center pl-6">
@@ -156,8 +189,13 @@ const KulitanKeyboard = (props: Props) => {
 					<span className="text-[12px]">Auto format</span>
 				</div>
 				<div className="flex">
+					<button
+						className={`mr-6 flex gap-2`}
+						onClick={captureOverflowDivAsImage}
+					>
+						<Download />
+					</button>
 					<button className={`mr-6 flex gap-2`} onClick={copyKulitanWords}>
-						<span className="text-[12px]">Copy</span>
 						<Copy />
 					</button>
 					<button
