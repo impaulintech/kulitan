@@ -12,13 +12,20 @@ import { useKulitanContext } from "@/context/kulitan-context";
 import denormalizeWords from "@/utils/denormalizeWords";
 import normalizeWords from "@/utils/normalizeWords";
 import delatinizeVowels from "@/utils/delatinizeVowels";
-import AutoFormatUserInput from "@/utils/useAutoFormatUserInput";
-import autoFormatUserInput from "@/utils/useAutoFormatUserInput";
+import autoFormatUserInput from "@/utils/autoFormatUserInput";
 import getWordAtCursor from "@/utils/getWordAtCursor";
 
 export default function Transcribe() {
-	const { kulitanWords, setKulitanWords, isAutoCorrect } = useKulitanContext();
+	const {
+		kulitanWords,
+		setKulitanWords,
+		isAutoCorrect,
+		setCursorPosition,
+		setTextAreaRef,
+	} = useKulitanContext();
 	const textareaRef: any = useRef(null);
+	const lastClickPositionRef = useRef(null);
+	const textarea = textareaRef.current;
 	const [isAutoFormatKeyClicked, setIsAutoFormatKeyClicked] = useState(false);
 
 	const getWordElements: any = (() => {
@@ -38,18 +45,40 @@ export default function Transcribe() {
 	})();
 
 	const normalWordChange = (e: any) => {
-		const newValue = e.target.value;
+		const newValue: any = e.target.value;
 		const convertToHTMLTags = denormalizeWords(newValue);
 		setKulitanWords(convertToHTMLTags);
+		setTextAreaRef(textareaRef);
+		const keyType = e.nativeEvent.inputType;
+		const keyData = e.nativeEvent.data;
+
 		if (
-			(e.key === "Backspace" && e.keyCode === 8) ||
-			(e.key === "Delete" && e.keyCode === 46)
+			keyType === "deleteContentBackward" ||
+			keyType === "deleteContentForward"
 		) {
 			setIsAutoFormatKeyClicked(true);
 			return;
 		} else {
-			console.log(newValue);
-			autoFormatUserInput(newValue, setKulitanWords, isAutoCorrect, e);
+			if (!textarea) return;
+			const activeWordInCursor = getWordAtCursor(textarea, 1);
+			
+			if (keyData === " " || keyType === "insertLineBreak") {
+				if (isAutoCorrect) {
+					const currentCursorPosition = autoFormatUserInput(
+						activeWordInCursor.replace(/[\s\n]+$/, ""),
+						newValue,
+						setKulitanWords,
+						isAutoCorrect,
+						e,
+					);
+					setCursorPosition(
+						textareaRef.current.selectionStart + currentCursorPosition,
+					);
+					setIsAutoFormatKeyClicked(false);
+					return;
+				}
+			}
+			setCursorPosition(textareaRef.current.selectionStart);
 			setIsAutoFormatKeyClicked(false);
 		}
 	};
@@ -67,10 +96,33 @@ export default function Transcribe() {
 		}
 	};
 
-	const trackCursor = (e: any) => { 
-		const textarea = textareaRef.current;
-		if (!textarea) return; 
-		console.log(getWordAtCursor(textarea));
+	const trackCursor = (e: any) => {
+		const newValue = e.target.value;
+		if (!textareaRef.current) return;
+
+		const activeWordInCursor = getWordAtCursor(textareaRef.current);
+
+		// Record the click position
+		lastClickPositionRef.current = textareaRef.current.selectionStart;
+		if (isAutoCorrect) {
+			autoFormatUserInput(
+				activeWordInCursor,
+				newValue,
+				setKulitanWords,
+				isAutoCorrect,
+				e,
+			);
+		}
+		setIsAutoFormatKeyClicked(false);
+
+		if (textareaRef.current) {
+			textareaRef.current.focus();
+
+			// Use the last click position to set the selection range
+			if (lastClickPositionRef.current !== null) {
+				setCursorPosition(lastClickPositionRef.current);
+			}
+		}
 	};
 
 	useEffect(() => {
@@ -80,6 +132,7 @@ export default function Transcribe() {
 			);
 
 		if (textareaRef.current) {
+			setTextAreaRef(textareaRef);
 			textareaRef.current.focus();
 			const textLength = textareaRef.current.value.length;
 			textareaRef.current.setSelectionRange(textLength, textLength);
@@ -117,7 +170,23 @@ export default function Transcribe() {
 					<TransparentCard className="flex justify-end items-end">
 						<div
 							className="
+								absolute z-0 right-[1000%]
 								flex flex-row-reverse justify-start items-start 
+								bg-dark gap-1 overflow-x-scroll px-2 min-h-[180px] min-w-[360px] h-full copy-div-element
+							"
+						>
+							<div
+								onInput={kulitanWordChange}
+								className="kulitan-class text-white text-[21px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
+								spellCheck="false"
+								dangerouslySetInnerHTML={{
+									__html: delatinizeVowels(kulitanWords.replace(/\s/g, "<br>")),
+								}}
+							></div>
+						</div>
+						<div
+							className="
+								flex flex-row-reverse justify-start items-start
 								w-full gap-1 overflow-x-scroll px-2 min-h-[180px] h-full
 							"
 						>

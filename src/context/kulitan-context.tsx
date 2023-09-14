@@ -10,7 +10,7 @@ import React, {
 import normalizeWords from "@/utils/normalizeWords";
 import denormalizeWords from "@/utils/denormalizeWords";
 import latinizeVowels from "@/utils/latinizeVowels";
-import autoFormatUserInput from "@/utils/useAutoFormatUserInput";
+import autoFormatUserInput from "@/utils/autoFormatUserInput";
 
 const KulitanContext = createContext<any>(null);
 
@@ -18,8 +18,9 @@ const KulitanContextProvider = ({ children }: any) => {
 	const [isAutoCorrect, setIsAutoCorrect] = useState(false);
 	const [isAddActionClicked, setIsAddActionClicked] = useState(false);
 	const [cursorPosition, setCursorPosition] = useState(null);
+	const [textAreaRef, setTextAreaRef] = useState<any>(null);
 	const [kulitanWords, setKulitanWords] = useTransformedState(
-		"kapampangan",
+		"a tin ku pung sing sing <div>la wii wiing pam bang saa </div>",
 	);
 	const textareaRef: any = useRef(null);
 
@@ -28,28 +29,21 @@ const KulitanContextProvider = ({ children }: any) => {
 		const normalizedWords = normalizeWords(transformedValue);
 
 		useEffect(() => {
-			setKulitanWords(denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase());
+			setKulitanWords(
+				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
+			);
 		}, []);
 
 		useEffect(() => {
-			if (!isAutoCorrect) return;
-			autoFormatUserInput(kulitanWords, setKulitanWords, isAutoCorrect);
-		}, [isAutoCorrect]);
-
-		useEffect(() => {
-			if (!isAutoCorrect) {
-				return setKulitanWords(
-					denormalizeWords(latinizeVowels(normalizedWords).toLowerCase()),
-				);
-			}
+			setKulitanWords(
+				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
+			);
 
 			// Position the cursor to the latest position
-			if (textareaRef.current && cursorPosition !== null) {
-				const newPosition =
-					cursorPosition + (transformedValue.length - normalizedWords.length);
-				textareaRef.current.setSelectionRange(newPosition, newPosition);
+			if (cursorPosition !== null) {
+				textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
 			}
-		}, [transformedValue, isAutoCorrect]);
+		}, [transformedValue]);
 
 		return [transformedValue, setTransformedValue];
 	}
@@ -66,6 +60,8 @@ const KulitanContextProvider = ({ children }: any) => {
 				setCursorPosition,
 				setIsAutoCorrect,
 				textareaRef,
+				textAreaRef,
+				setTextAreaRef,
 			}}
 		>
 			{children}

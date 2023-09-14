@@ -1,9 +1,11 @@
 import KulitanKeyAction from "@/components/atoms/KulitanKeyAction";
 import { useKulitanContext } from "@/context/kulitan-context";
 import { BackArrow } from "@/shared/icons/BackArrow";
+import { Copy } from "@/shared/icons/Copy";
 import denormalizeWords from "@/utils/denormalizeWords";
 import { Switch } from "@headlessui/react";
 import React, { useState } from "react";
+import html2canvas from "html2canvas";
 
 type Props = {
 	children: any;
@@ -104,6 +106,34 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
+	const copyKulitanWords = async () => {
+		const divToCopy: any = document.querySelector(".copy-div-element");
+
+		if (!divToCopy) {
+			console.error("Element not found.");
+			return;
+		}
+
+		try {
+			const canvas = await html2canvas(divToCopy);
+
+			// Convert the canvas to a blob
+			canvas.toBlob(async (blob) => {
+				if (blob) {
+					// Create a new ClipboardItem and copy it to the clipboard
+					const clipboardItem = new ClipboardItem({ "image/png": blob });
+					await navigator.clipboard.write([clipboardItem]);
+
+					alert("Image copied successfully.");
+				} else {
+					alert("Failed to copy image.");
+				}
+			}, "image/png");
+		} catch (error: any) {
+			alert("Error capturing and copying image:");
+		}
+	};
+
 	return (
 		<div className="sticky w-full h-full">
 			<div className="h-[30px] bg-dark w-full bottom-[275px] z-30 flex gap-2 justify-between items-center pl-6">
@@ -123,14 +153,20 @@ const KulitanKeyboard = (props: Props) => {
 							} inline-block h-3 w-3 transform rounded-full bg-[#57BB47] transition`}
 						/>
 					</Switch>
-					<span className="text-[12px]">Auto correct</span>
+					<span className="text-[12px]">Auto format</span>
 				</div>
-				<button
-					className={`mr-6 ${isKeyboardActive ? "-rotate-90" : "rotate-90"}`}
-					onClick={() => setIsKeyboardActive(!isKeyboardActive)}
-				>
-					<BackArrow />
-				</button>
+				<div className="flex">
+					<button className={`mr-6 flex gap-2`} onClick={copyKulitanWords}>
+						<span className="text-[12px]">Copy</span>
+						<Copy />
+					</button>
+					<button
+						className={`mr-6 ${isKeyboardActive ? "-rotate-90" : "rotate-90"}`}
+						onClick={() => setIsKeyboardActive(!isKeyboardActive)}
+					>
+						<BackArrow />
+					</button>
+				</div>
 			</div>
 			<div
 				className={`
