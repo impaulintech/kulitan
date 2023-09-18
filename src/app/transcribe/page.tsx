@@ -176,33 +176,19 @@ export default function Transcribe() {
 					<p className="font-kulitan text-[20px] z-10">i lu lin</p>
 				</div>
 				<div className="flex gap-3 flex-wrap justify-center items-start px-5">
-					<div className="flex flex-col relative">
-						<TransparentCard className="z-10">
-							<textarea
-								id="sourceTextarea"
-								ref={textareaRef}
-								className="z-10 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
-								name="postContent"
-								spellCheck="false"
-								rows={3}
-								value={normalizeWords(kulitanWords)}
-								onChange={normalWordChange}
-								onClick={trackCursor}
-								readOnly={isReadOnly}
-							/>
-						</TransparentCard>
-						<TransparentCard className="z-0 absolute top-0 left-0">
-							<textarea
-								id="targetTextarea"
-								ref={textareaRefClone}
-								className="z-0 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
-								name="postContent"
-								spellCheck="false"
-								rows={3}
-								value={normalizeWords(kulitanWords)}
-							/>
-						</TransparentCard>
-					</div>
+					<TransparentCard className="z-10">
+						<textarea
+							ref={textareaRef}
+							className="z-10 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
+							name="postContent"
+							spellCheck="false"
+							rows={3}
+							value={normalizeWords(kulitanWords)}
+							onChange={normalWordChange}
+							onClick={trackCursor}
+							readOnly={isReadOnly}
+						/>
+					</TransparentCard>
 					<TransparentCard className="flex justify-end items-end">
 						<div
 							className="
