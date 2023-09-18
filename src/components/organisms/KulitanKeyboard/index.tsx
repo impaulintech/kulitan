@@ -23,14 +23,15 @@ const KulitanKeyboard = (props: Props) => {
 		setIsAddActionClicked,
 		isAutoCorrect,
 		setIsAutoCorrect,
+		isMobilePhone,
 	} = useKulitanContext();
 	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
 
-	const deleteAction = () => {
+	const deleteAction = (e: any) => {
 		setKulitanWords("");
 	};
 
-	const addAction = () => {
+	const addAction = (e: any) => {
 		if (isAddActionClicked) return;
 		setIsAddActionClicked(true);
 		if (textareaRef.current) {
@@ -63,7 +64,7 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
-	const backSpaceAction = () => {
+	const backSpaceAction = (e: any) => {
 		if (textareaRef.current) {
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
@@ -84,7 +85,7 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
-	const newLineAction = () => {
+	const newLineAction = (e: any) => {
 		if (textareaRef.current) {
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
@@ -170,10 +171,15 @@ const KulitanKeyboard = (props: Props) => {
 	return (
 		<div className="sticky w-full h-full">
 			<div className="h-[30px] bg-dark w-full bottom-[275px] z-30 flex gap-2 justify-between items-center pl-6">
-				<div className="flex gap-2">
+				<div
+					className="flex gap-2"
+					onClick={(e: any) => {
+						e.preventDefault();
+						setIsAutoCorrect(!isAutoCorrect);
+					}}
+				>
 					<Switch
 						checked={isAutoCorrect}
-						onChange={setIsAutoCorrect}
 						className={`${
 							isAutoCorrect
 								? "bg-[rgba(255,255,255,90%)]"
@@ -190,17 +196,29 @@ const KulitanKeyboard = (props: Props) => {
 				</div>
 				<div className="flex">
 					<button
-						className={`mr-6 flex gap-2`}
+						className={`${
+							isMobilePhone && "hidden"
+						} mr-6 flex gap-2 select-none`}
 						onClick={captureOverflowDivAsImage}
 					>
 						<Download />
 					</button>
-					<button className={`mr-6 flex gap-2`} onClick={copyKulitanWords}>
+					<button
+						className={`${
+							isMobilePhone && "hidden"
+						} mr-6 flex gap-2 select-none`}
+						onClick={copyKulitanWords}
+					>
 						<Copy />
 					</button>
 					<button
-						className={`mr-6 ${isKeyboardActive ? "-rotate-90" : "rotate-90"}`}
-						onClick={() => setIsKeyboardActive(!isKeyboardActive)}
+						className={`mr-6 ${
+							isKeyboardActive ? "-rotate-90" : "rotate-90"
+						} select-none`}
+						onClick={(e: any) => {
+							e.preventDefault();
+							setIsKeyboardActive(!isKeyboardActive);
+						}}
 					>
 						<BackArrow />
 					</button>

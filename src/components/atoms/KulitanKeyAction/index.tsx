@@ -1,3 +1,4 @@
+import { useKulitanContext } from "@/context/kulitan-context";
 import { Add } from "@/shared/icons/Add";
 import { BackSpace } from "@/shared/icons/BackSpace";
 import { DeleteAll } from "@/shared/icons/DeleteAll";
@@ -11,6 +12,7 @@ type Props = {
 
 const KulitanKeyAction = (props: Props) => {
 	const { action, keyFunction } = props;
+	const { isMobilePhone } = useKulitanContext();
 	const [isKeyClicked, setIsKeyClicked] = useState(false);
 	const [isTimerId, setIsTimerId] = useState<any>(null);
 	const [isIntervalId, setIsIntervalId] = useState<any>(null);
@@ -34,6 +36,18 @@ const KulitanKeyAction = (props: Props) => {
 		clearInterval(isIntervalId);
 	};
 
+	const onTouchDown = () => {
+		keyFunction();
+		setIsKeyClicked(true);
+		startTimer();
+	};
+
+	const onTouchUp = () => {
+		setIsKeyClicked(false);
+		clearTimeout(isTimerId);
+		clearInterval(isIntervalId);
+	};
+
 	const onClickAction = () => {
 		keyFunction();
 	};
@@ -47,9 +61,11 @@ const KulitanKeyAction = (props: Props) => {
 
 	return (
 		<div
-			onClick={onClickAction}
-			onMouseDown={onMouseDown}
-			onMouseUp={onMouseUp}
+			onMouseDown={() => !isMobilePhone && onMouseDown()}
+			onMouseUp={() => !isMobilePhone && onMouseUp()}
+			onClick={() => !isMobilePhone && onClickAction()}
+			onTouchStart={() => isMobilePhone && onTouchDown()}
+			onTouchEnd={() => isMobilePhone && onTouchUp()}
 			className="relative flex flex-col items-center justify-center"
 		>
 			<button

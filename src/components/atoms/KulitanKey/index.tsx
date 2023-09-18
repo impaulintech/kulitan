@@ -20,19 +20,25 @@ const KulitanKey = (props: Props) => {
 		hasSub = true,
 		textareaRef,
 	} = props;
-	const { kulitanWords, setKulitanWords, setIsAddActionClicked } =
-		useKulitanContext();
+	const {
+		isMobilePhone,
+		setKulitanWords,
+		setIsAddActionClicked,
+		setDisableScroll,
+	} = useKulitanContext();
 
 	const [isSubHover, setIsSubHover] = useState(false);
 	const [isKeyClicked, setIsKeyClicked] = useState(false);
 	const [isSubActive, setIsSubActive] = useState(mainKey);
 	const [isTimerId, setIsTimerId] = useState<any>(null);
+	const [cursorPosition, setCursorPosition] = useState<any>({ x: 0, y: 0 });
 	let activeKey: any;
 
 	const startTimer = () => {
 		setIsTimerId(
 			setTimeout(() => {
 				setIsSubHover(true);
+				setDisableScroll(true);
 			}, 300),
 		);
 	};
@@ -65,6 +71,7 @@ const KulitanKey = (props: Props) => {
 	};
 
 	const onMouseDown = (e: any) => {
+		e.preventDefault();
 		setIsKeyClicked(true);
 		startTimer();
 		activeKey = e.target.classList[0];
@@ -72,6 +79,7 @@ const KulitanKey = (props: Props) => {
 	};
 
 	const onMouseUp = (e: any) => {
+		e.preventDefault();
 		clearTimeout(isTimerId);
 		const x = e.clientX;
 		const y = e.clientY;
@@ -82,6 +90,7 @@ const KulitanKey = (props: Props) => {
 			!hoveredElement.classList.contains(`key-${subKeyOne}`)
 		) {
 			setIsSubHover(false);
+			setDisableScroll(false);
 			setIsSubActive(mainKey);
 			setIsKeyClicked(false);
 			return;
@@ -92,17 +101,87 @@ const KulitanKey = (props: Props) => {
 		handleButtonClick(hoveredElement.innerText);
 
 		setIsSubHover(false);
+		setDisableScroll(false);
 		setIsSubActive(mainKey);
 		setIsKeyClicked(false);
 
 		document.removeEventListener("mouseup", onMouseUp);
 	};
 
+	const handleTouchMove = (e: any) => {
+		if (e.touches && e.touches.length > 0) {
+			const touch = e.touches[0];
+			const x = touch.clientX;
+			const y = touch.clientY;
+
+			setCursorPosition({ x, y });
+			const hoveredElement: any = document.elementFromPoint(
+				cursorPosition.x,
+				cursorPosition.y,
+			);
+			setIsSubActive(hoveredElement.innerText);
+		}
+	};
+
+	const onTouchStart = (e: any) => {
+		if (e.cancelable) {
+			e.preventDefault();
+		}
+		if (e.touches && e.touches.length > 0) {
+			const touch = e.touches[0];
+			const x = touch.clientX;
+			const y = touch.clientY;
+			setCursorPosition({ x, y });
+		}
+		setIsKeyClicked(true);
+		startTimer();
+		activeKey = e.target.classList[0];
+	};
+
+	const onTouchEnd = (e: any) => {
+		if (e.cancelable) {
+			e.preventDefault();
+		}
+		clearTimeout(isTimerId);
+		const hoveredElement: any = document.elementFromPoint(
+			cursorPosition.x,
+			cursorPosition.y,
+		);
+		const touchedElement: any = document.elementFromPoint(
+			cursorPosition.x,
+			cursorPosition.y,
+		);
+
+		if (
+			!hoveredElement ||
+			!hoveredElement.classList.contains(`key-${subKeyOne}`)
+		) {
+			setIsSubHover(false);
+			setDisableScroll(false);
+			setIsSubActive(mainKey);
+			setIsKeyClicked(false);
+			return;
+		}
+
+		if (!isKeyClicked) return;
+
+		handleButtonClick(touchedElement.innerText);
+
+		setIsSubHover(false);
+		setDisableScroll(false);
+		setIsSubActive(mainKey);
+		setIsKeyClicked(false);
+	};
+
 	return (
 		<div
-			onMouseDown={onMouseDown}
-			onMouseUp={onMouseUp}
+			onMouseDown={(e) => !isMobilePhone && onMouseDown(e)}
+			onMouseUp={(e) => !isMobilePhone && onMouseUp(e)}
+			onTouchStart={(e) => isMobilePhone && onTouchStart(e)}
+			onTouchEnd={(e) => isMobilePhone && onTouchEnd(e)}
+			onTouchMove={(e) => isMobilePhone && handleTouchMove(e)}
 			className={`key-${subKeyOne} relative flex flex-col items-center justify-center`}
+			id="test"
 		>
 			<div
 				className={`
@@ -112,9 +191,9 @@ const KulitanKey = (props: Props) => {
 				`}
 			>
 				<span
-					onMouseOver={() => setIsSubActive(subKeyOne)}
+					onTouchStart={() => setIsSubActive(subKeyOne)}
 					className={`
-						key-${subKeyOne}
+						key-${subKeyOne} select-none
 						${isSubActive === subKeyOne ? "bg-slate-900" : "bg-slate-400"} 
 						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
 					`}
@@ -122,9 +201,9 @@ const KulitanKey = (props: Props) => {
 					{subKeyOne}
 				</span>
 				<span
-					onMouseOver={() => setIsSubActive(subKeyTwo)}
+					onTouchStart={() => setIsSubActive(subKeyTwo)}
 					className={`
-						key-${subKeyOne}
+						key-${subKeyOne} select-none
 						${isSubActive === subKeyTwo ? "bg-slate-900" : "bg-slate-400"}  
 						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
 					`}
@@ -132,9 +211,9 @@ const KulitanKey = (props: Props) => {
 					{subKeyTwo}
 				</span>
 				<span
-					onMouseOver={() => setIsSubActive(subKeyThree)}
+					onTouchStart={() => setIsSubActive(subKeyThree)}
 					className={`
-						key-${subKeyOne}
+						key-${subKeyOne} select-none
 						${isSubActive === subKeyThree ? "bg-slate-900" : "bg-slate-400"}  
 						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
 					`}
@@ -145,7 +224,7 @@ const KulitanKey = (props: Props) => {
 			<button
 				className={`
 					key-${subKeyOne}
-					${isKeyClicked && "bg-slate-900"} 
+					${isKeyClicked && "bg-slate-900"}  select-none
 					font-kulitan h-[57px] w-[74px] flex justify-center items-center text-light text-[42px] relative rounded-sm
 				`}
 			>

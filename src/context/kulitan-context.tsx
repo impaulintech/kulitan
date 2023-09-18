@@ -16,6 +16,7 @@ const KulitanContext = createContext<any>(null);
 
 const KulitanContextProvider = ({ children }: any) => {
 	const [isAutoCorrect, setIsAutoCorrect] = useState(false);
+	const [isMobilePhone, setIsMobilePhone] = useState(true);
 	const [isAddActionClicked, setIsAddActionClicked] = useState(false);
 	const [cursorPosition, setCursorPosition] = useState(null);
 	const [textAreaRef, setTextAreaRef] = useState<any>(null);
@@ -25,18 +26,23 @@ const KulitanContextProvider = ({ children }: any) => {
 	const textareaRef: any = useRef(null);
 	const [kulitanLibrary, setKulitanLibrary] =
 		useState<any>(localKulitanLibrary);
+	const [disableScroll, setDisableScroll] = useState(false);
 
 	function useTransformedState(initialValue: any) {
 		const [transformedValue, setTransformedValue] = useState(initialValue);
 		const normalizedWords = normalizeWords(transformedValue);
 
 		useEffect(() => {
+			setIsMobilePhone(
+				"ontouchstart" in window || "onmsgesturechange" in window,
+			);
+
 			const path = process.env.NEXT_PUBLIC_BACKEND_URL;
 			const options = {
 				method: "GET",
-				headers: { "Allow-Access-Origin": "*" },
+				headers: { "Access-Control-Allow-Origin": "*" },
 			};
-			
+
 			fetch(path + "/kulitanLibrary.json", options)
 				.then((response) => response.json())
 				.then((response) => setKulitanLibrary(response))
@@ -51,11 +57,10 @@ const KulitanContextProvider = ({ children }: any) => {
 			setKulitanWords(
 				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
 			);
-
 			// Position the cursor to the latest position
-			if (cursorPosition !== null) {
-				textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
-			}
+			// if (cursorPosition !== null) {
+			// 	textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
+			// }
 		}, [transformedValue]);
 
 		return [transformedValue, setTransformedValue];
@@ -76,6 +81,9 @@ const KulitanContextProvider = ({ children }: any) => {
 				textAreaRef,
 				setTextAreaRef,
 				kulitanLibrary,
+				isMobilePhone,
+				disableScroll,
+				setDisableScroll,
 			}}
 		>
 			{children}

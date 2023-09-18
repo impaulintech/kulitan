@@ -22,7 +22,9 @@ export default function Transcribe() {
 		isAutoCorrect,
 		setCursorPosition,
 		setTextAreaRef,
-		kulitanLibrary
+		kulitanLibrary,
+		isSubHover,
+		disableScroll
 	} = useKulitanContext();
 	const textareaRef: any = useRef(null);
 	const lastClickPositionRef = useRef(null);
@@ -62,7 +64,7 @@ export default function Transcribe() {
 		} else {
 			if (!textarea) return;
 			const activeWordInCursor = getWordAtCursor(textarea, 1);
-			
+
 			if (keyData === " " || keyType === "insertLineBreak") {
 				if (isAutoCorrect) {
 					const currentCursorPosition = autoFormatUserInput(
@@ -111,7 +113,7 @@ export default function Transcribe() {
 				activeWordInCursor,
 				newValue,
 				setKulitanWords,
-				isAutoCorrect, 
+				isAutoCorrect,
 				kulitanLibrary,
 				e,
 			);
@@ -148,7 +150,7 @@ export default function Transcribe() {
 	}, []);
 
 	return (
-		<main className="flex min-h-screen min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative">
+		<main className={`${disableScroll ? "overflow-hidden h-screen" : "min-h-screen"} flex min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative`}>
 			<div className="w-full flex flex-col gap-6">
 				<div className="w-full flex justify-center items-center relative h-[49px]">
 					<div className="bg-black w-full absolute h-full z-0 opacity-30"></div>
