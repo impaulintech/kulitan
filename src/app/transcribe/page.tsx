@@ -24,9 +24,14 @@ export default function Transcribe() {
 		setTextAreaRef,
 		kulitanLibrary,
 		isSubHover,
-		disableScroll
+		disableScroll,
+		isKeyboardActive,
+		setIsKeyboardActive,
+		isReadOnly,
+		setIsReadOnly,
 	} = useKulitanContext();
 	const textareaRef: any = useRef(null);
+	const textareaRefClone: any = useRef(null);
 	const lastClickPositionRef = useRef(null);
 	const textarea = textareaRef.current;
 	const [isAutoFormatKeyClicked, setIsAutoFormatKeyClicked] = useState(false);
@@ -101,6 +106,8 @@ export default function Transcribe() {
 	};
 
 	const trackCursor = (e: any) => {
+		setIsKeyboardActive(false);
+		setIsReadOnly(false);
 		const newValue = e.target.value;
 		if (!textareaRef.current) return;
 
@@ -108,6 +115,7 @@ export default function Transcribe() {
 
 		// Record the click position
 		lastClickPositionRef.current = textareaRef.current.selectionStart;
+
 		if (isAutoCorrect) {
 			autoFormatUserInput(
 				activeWordInCursor,
@@ -120,11 +128,15 @@ export default function Transcribe() {
 		}
 		setIsAutoFormatKeyClicked(false);
 
-		if (textareaRef.current) {
-			textareaRef.current.focus();
+		if (textareaRefClone.current) {
+			textareaRefClone.current.focus();
 
 			// Use the last click position to set the selection range
 			if (lastClickPositionRef.current !== null) {
+				textareaRefClone.current.setSelectionRange(
+					lastClickPositionRef.current,
+					lastClickPositionRef.current,
+				);
 				setCursorPosition(lastClickPositionRef.current);
 			}
 		}
@@ -150,7 +162,11 @@ export default function Transcribe() {
 	}, []);
 
 	return (
-		<main className={`${disableScroll ? "overflow-hidden h-screen" : "min-h-screen"} flex min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative`}>
+		<main
+			className={`${
+				disableScroll ? "overflow-hidden h-screen" : "min-h-screen"
+			} flex min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative`}
+		>
 			<div className="w-full flex flex-col gap-6">
 				<div className="w-full flex justify-center items-center relative h-[49px]">
 					<div className="bg-black w-full absolute h-full z-0 opacity-30"></div>
@@ -160,18 +176,33 @@ export default function Transcribe() {
 					<p className="font-kulitan text-[20px] z-10">i lu lin</p>
 				</div>
 				<div className="flex gap-3 flex-wrap justify-center items-start px-5">
-					<TransparentCard>
-						<textarea
-							ref={textareaRef}
-							className="z-0 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
-							name="postContent"
-							spellCheck="false"
-							rows={3}
-							value={normalizeWords(kulitanWords)}
-							onChange={normalWordChange}
-							onClick={trackCursor}
-						/>
-					</TransparentCard>
+					<div className="flex flex-col relative">
+						<TransparentCard className="z-10">
+							<textarea
+								id="sourceTextarea"
+								ref={textareaRef}
+								className="z-10 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
+								name="postContent"
+								spellCheck="false"
+								rows={3}
+								value={normalizeWords(kulitanWords)}
+								onChange={normalWordChange}
+								onClick={trackCursor}
+								readOnly={isReadOnly}
+							/>
+						</TransparentCard>
+						<TransparentCard className="z-0 absolute top-0 left-0">
+							<textarea
+								id="targetTextarea"
+								ref={textareaRefClone}
+								className="z-0 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
+								name="postContent"
+								spellCheck="false"
+								rows={3}
+								value={normalizeWords(kulitanWords)}
+							/>
+						</TransparentCard>
+					</div>
 					<TransparentCard className="flex justify-end items-end">
 						<div
 							className="
@@ -190,6 +221,10 @@ export default function Transcribe() {
 							></div>
 						</div>
 						<div
+							onClick={() => {
+								setIsReadOnly(true);
+								setIsKeyboardActive(true);
+							}}
 							className="
 								flex flex-row-reverse justify-start items-start
 								w-full gap-1 overflow-x-scroll px-2 min-h-[180px] h-full

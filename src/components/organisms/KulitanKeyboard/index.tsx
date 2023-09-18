@@ -24,14 +24,19 @@ const KulitanKeyboard = (props: Props) => {
 		isAutoCorrect,
 		setIsAutoCorrect,
 		isMobilePhone,
+		isKeyboardActive,
+		setIsKeyboardActive,
+		isReadOnly,
+		setIsReadOnly,
 	} = useKulitanContext();
-	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
 
 	const deleteAction = (e: any) => {
+		setIsReadOnly(true);
 		setKulitanWords("");
 	};
 
 	const addAction = (e: any) => {
+		setIsReadOnly(true);
 		if (isAddActionClicked) return;
 		setIsAddActionClicked(true);
 		if (textareaRef.current) {
@@ -65,6 +70,7 @@ const KulitanKeyboard = (props: Props) => {
 	};
 
 	const backSpaceAction = (e: any) => {
+		setIsReadOnly(true);
 		if (textareaRef.current) {
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
@@ -86,6 +92,7 @@ const KulitanKeyboard = (props: Props) => {
 	};
 
 	const newLineAction = (e: any) => {
+		setIsReadOnly(true);
 		if (textareaRef.current) {
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
@@ -175,6 +182,7 @@ const KulitanKeyboard = (props: Props) => {
 					className="flex gap-2"
 					onClick={(e: any) => {
 						e.preventDefault();
+						setIsReadOnly(true);
 						setIsAutoCorrect(!isAutoCorrect);
 					}}
 				>
@@ -217,6 +225,7 @@ const KulitanKeyboard = (props: Props) => {
 						} select-none`}
 						onClick={(e: any) => {
 							e.preventDefault();
+							setIsReadOnly(!isKeyboardActive);
 							setIsKeyboardActive(!isKeyboardActive);
 						}}
 					>

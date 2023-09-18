@@ -27,6 +27,8 @@ const KulitanContextProvider = ({ children }: any) => {
 	const [kulitanLibrary, setKulitanLibrary] =
 		useState<any>(localKulitanLibrary);
 	const [disableScroll, setDisableScroll] = useState(false);
+	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
+	const [isReadOnly, setIsReadOnly] = useState(true);
 
 	function useTransformedState(initialValue: any) {
 		const [transformedValue, setTransformedValue] = useState(initialValue);
@@ -57,11 +59,12 @@ const KulitanContextProvider = ({ children }: any) => {
 			setKulitanWords(
 				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
 			);
+			
 			// Position the cursor to the latest position
-			// if (cursorPosition !== null) {
-			// 	textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
-			// }
-		}, [transformedValue]);
+			if (cursorPosition !== null) {
+				textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
+			}
+		}, [transformedValue, cursorPosition]);
 
 		return [transformedValue, setTransformedValue];
 	}
@@ -84,6 +87,10 @@ const KulitanContextProvider = ({ children }: any) => {
 				isMobilePhone,
 				disableScroll,
 				setDisableScroll,
+				isKeyboardActive,
+				setIsKeyboardActive,
+				isReadOnly,
+				setIsReadOnly,
 			}}
 		>
 			{children}
