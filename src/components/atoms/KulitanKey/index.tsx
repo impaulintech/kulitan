@@ -37,6 +37,8 @@ const KulitanKey = (props: Props) => {
 	let activeKey: any;
 
 	const startTimer = () => {
+		if (!subKeyOne) return;
+		
 		setIsTimerId(
 			setTimeout(() => {
 				setIsSubHover(true);
@@ -176,10 +178,12 @@ const KulitanKey = (props: Props) => {
 		setIsKeyClicked(false);
 	};
 
+	const isUserDesktop = !isMobilePhone;
+
 	return (
 		<div
-			onMouseDown={(e) => !isMobilePhone && onMouseDown(e)}
-			onMouseUp={(e) => !isMobilePhone && onMouseUp(e)}
+			onMouseDown={(e) => isUserDesktop && onMouseDown(e)}
+			onMouseUp={(e) => isUserDesktop && onMouseUp(e)}
 			onTouchStart={(e) => isMobilePhone && onTouchStart(e)}
 			onTouchEnd={(e) => isMobilePhone && onTouchEnd(e)}
 			onTouchMove={(e) => isMobilePhone && handleTouchMove(e)}

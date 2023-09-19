@@ -3,6 +3,8 @@ import Image from "next/image";
 
 import Card from "@/components/templates/Card"; 
 import KapampanganFont from "@/shared/images/kapampangan-font.png";
+import KapampanganReading from "@/shared/images/reading.png";
+import KapampanganWriting from "@/shared/images/writing.png";
 
 export default function Home() {
 	return (
@@ -34,8 +36,40 @@ export default function Home() {
 					/>
 					<p className="h-[30%] pt-2 text-shadow">kapampangan</p>
 				</Card>
+				<Card
+					link="reading"
+					buttonTitle={
+						<>
+							Reading | <span className="font-kulitan">pa g ba sa</span>
+						</>
+					}
+				>
+					<Image
+						src={KapampanganReading}
+						alt="reading" 
+						className="py-5"
+						width={300}
+						height={300}
+					/>
+				</Card>
+				<Card
+					link="writing"
+					buttonTitle={
+						<>
+							Writing | <span className="font-kulitan">pa g su la t</span>
+						</>
+					}
+				>
+					<Image
+						src={KapampanganWriting}
+						alt="writing"
+						className="py-2"
+						width={120}
+						height={120}
+					/>
+				</Card>
 			</div>
-			<footer className="absolute bottom-10 left-0 w-full flex items-center justify-center">
+			<footer className="w-full flex items-center justify-center">
 				<span className="font-kulitan text-dark opacity-50 font-bold text-[18px]">
 					ka pang pang an
 				</span>

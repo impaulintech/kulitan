@@ -13,7 +13,7 @@ const Card = (props: Props) => {
 
 	return (
 		<div className="flex flex-col items-center justify-center w-full">
-			<div className="bg-card w-full rounded-t-md min-h-[132px]">
+			<div className="bg-card w-full rounded-t-md ">
 				<div className="transcribe-bg w-full h-full flex flex-col items-center justify-center py-3 bg-contain">
 					{children}
 				</div>
