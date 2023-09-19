@@ -25,6 +25,8 @@ const KulitanKey = (props: Props) => {
 		setKulitanWords,
 		setIsAddActionClicked,
 		setDisableScroll,
+		disableScroll,
+		scrollY,
 	} = useKulitanContext();
 
 	const [isSubHover, setIsSubHover] = useState(false);
@@ -91,6 +93,7 @@ const KulitanKey = (props: Props) => {
 		) {
 			setIsSubHover(false);
 			setDisableScroll(false);
+			window.scrollTo(0, scrollY);
 			setIsSubActive(mainKey);
 			setIsKeyClicked(false);
 			return;
@@ -187,7 +190,7 @@ const KulitanKey = (props: Props) => {
 				className={`
 					key-${subKeyOne}
 					${isSubHover ? "flex" : "hidden"} 
-					"mb-1 absolute z-50 -top-9 -mt-[100px]"
+					" absolute z-50 top-0"
 				`}
 			>
 				<span
@@ -195,7 +198,8 @@ const KulitanKey = (props: Props) => {
 					className={`
 						key-${subKeyOne} select-none
 						${isSubActive === subKeyOne ? "bg-slate-900" : "bg-slate-400"} 
-						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+						font-kulitan text-[24px] w-[30px] flex justify-center items-center cursor-pointer
+						h-[60px]
 					`}
 				>
 					{subKeyOne}
@@ -205,7 +209,8 @@ const KulitanKey = (props: Props) => {
 					className={`
 						key-${subKeyOne} select-none
 						${isSubActive === subKeyTwo ? "bg-slate-900" : "bg-slate-400"}  
-						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+						font-kulitan text-[24px] w-[30px] flex justify-center items-center cursor-pointer
+						h-[60px]
 					`}
 				>
 					{subKeyTwo}
@@ -215,7 +220,8 @@ const KulitanKey = (props: Props) => {
 					className={`
 						key-${subKeyOne} select-none
 						${isSubActive === subKeyThree ? "bg-slate-900" : "bg-slate-400"}  
-						font-kulitan text-[24px] h-full w-[30px] flex justify-center items-center cursor-pointer
+						font-kulitan text-[24px] w-[30px] flex justify-center items-center cursor-pointer
+						h-[60px]
 					`}
 				>
 					{subKeyThree}

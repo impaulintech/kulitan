@@ -23,11 +23,10 @@ export default function Transcribe() {
 		setCursorPosition,
 		setTextAreaRef,
 		kulitanLibrary,
-		isSubHover,
 		disableScroll,
-		isKeyboardActive,
 		setIsKeyboardActive,
 		isReadOnly,
+		scrollY,
 		setIsReadOnly,
 	} = useKulitanContext();
 	const textareaRef: any = useRef(null);
@@ -163,9 +162,7 @@ export default function Transcribe() {
 
 	return (
 		<main
-			className={`${
-				disableScroll ? "overflow-hidden h-screen" : "min-h-screen"
-			} flex min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative`}
+			className={`min-h-screen flex min-w-screen flex-col items-center justify-between gap-5 bg-gradient-container relative`}
 		>
 			<div className="w-full flex flex-col gap-6">
 				<div className="w-full flex justify-center items-center relative h-[49px]">
@@ -217,6 +214,7 @@ export default function Transcribe() {
 							"
 						>
 							<div
+								id="kulitan-text"
 								onInput={kulitanWordChange}
 								className="kulitan-class text-white text-[21px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
 								spellCheck="false"

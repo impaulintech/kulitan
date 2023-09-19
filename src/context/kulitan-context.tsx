@@ -29,6 +29,15 @@ const KulitanContextProvider = ({ children }: any) => {
 	const [disableScroll, setDisableScroll] = useState(false);
 	const [isKeyboardActive, setIsKeyboardActive] = useState(true);
 	const [isReadOnly, setIsReadOnly] = useState(true);
+	const [scrollY, setScrollY] = useState(0);
+	
+	// useEffect(() => {
+	// 	window.addEventListener("scroll", () => setScrollY(window.scrollY));
+
+	// 	return () => {
+	// 		window.removeEventListener("scroll", () => setScrollY(window.scrollY));
+	// 	};
+	// }, []);
 
 	function useTransformedState(initialValue: any) {
 		const [transformedValue, setTransformedValue] = useState(initialValue);
@@ -59,7 +68,7 @@ const KulitanContextProvider = ({ children }: any) => {
 			setKulitanWords(
 				denormalizeWords(latinizeVowels(normalizedWords)).toLowerCase(),
 			);
-			
+
 			// Position the cursor to the latest position
 			if (cursorPosition !== null) {
 				textAreaRef.current.setSelectionRange(cursorPosition, cursorPosition);
@@ -91,6 +100,7 @@ const KulitanContextProvider = ({ children }: any) => {
 				setIsKeyboardActive,
 				isReadOnly,
 				setIsReadOnly,
+				scrollY,
 			}}
 		>
 			{children}
