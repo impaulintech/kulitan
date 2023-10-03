@@ -13,7 +13,7 @@ export const DeleteAll: React.FC<IconName> = ({
 	height = "33",
 	width = "33",
 	isHovered,
-	color = isHovered ? "#FFFFFF" : "#0C3344",
+	color = isHovered ? "#FFFFFF" : "#111827",
 }): JSX.Element => {
 	return (
 		<svg

@@ -13,7 +13,7 @@ export const BackSpace: React.FC<IconName> = ({
 	height = "27",
 	width = "35",
 	isHovered,
-	color = isHovered ? "#FFFFFF" : "#0C3344",
+	color = isHovered ? "#FFFFFF" : "#111827",
 }): JSX.Element => {
 	return (
 		<svg

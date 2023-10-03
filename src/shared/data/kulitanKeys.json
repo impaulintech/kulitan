@@ -1,0 +1,83 @@
+[
+    {
+        "mainKey": "ga",
+        "subKeyOne": "gi",
+        "subKeyTwo": "ga",
+        "subKeyThree": "gu"
+    },
+    {
+        "mainKey": "ka",
+        "subKeyOne": "ki",
+        "subKeyTwo": "ka",
+        "subKeyThree": "ku"
+    },
+    {
+        "mainKey": "nga",
+        "subKeyOne": "ngi",
+        "subKeyTwo": "nga",
+        "subKeyThree": "ngu"
+    },
+    {
+        "mainKey": "a"
+    },
+    {
+        "mainKey": "ta",
+        "subKeyOne": "ti",
+        "subKeyTwo": "ta",
+        "subKeyThree": "tu"
+    },
+    {
+        "mainKey": "da",
+        "subKeyOne": "di",
+        "subKeyTwo": "da",
+        "subKeyThree": "du"
+    },
+    {
+        "mainKey": "na",
+        "subKeyOne": "ni",
+        "subKeyTwo": "na",
+        "subKeyThree": "nu"
+    },
+    {
+        "mainKey": "ga",
+        "subKeyOne": "gi",
+        "subKeyTwo": "ga",
+        "subKeyThree": "gu"
+    },
+    {
+        "mainKey": "la",
+        "subKeyOne": "li",
+        "subKeyTwo": "la",
+        "subKeyThree": "lu"
+    },
+    {
+        "mainKey": "sa",
+        "subKeyOne": "si",
+        "subKeyTwo": "sa",
+        "subKeyThree": "su"
+    },
+    {
+        "mainKey": "ma",
+        "subKeyOne": "mi",
+        "subKeyTwo": "ma",
+        "subKeyThree": "mu"
+    },
+    {
+        "mainKey": "u",
+        "subKeyOne": "wi",
+        "subKeyTwo": "u",
+        "subKeyThree": "wu"
+    },
+    {
+        "mainKey": "pa",
+        "subKeyOne": "pi",
+        "subKeyTwo": "pa",
+        "subKeyThree": "pu"
+    },
+    {
+        "mainKey": "ba",
+        "subKeyOne": "bi",
+        "subKeyTwo": "ba",
+        "subKeyThree": "bu"
+    }
+]

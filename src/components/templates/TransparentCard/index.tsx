@@ -10,8 +10,8 @@ const TransparentCard = (props: Props) => {
 	return (
 		<div
 			className={
-				className +
-				" min-w-[373px] rounded-md p-3 relative bg-card flex items-center justify-center"
+				"min-w-[290px] w-full rounded-md p-3 relative bg-card flex items-center justify-center " +
+				className
 			}
 		>
 			{children}

@@ -13,7 +13,7 @@ export const NewLine: React.FC<IconName> = ({
 	height = "26",
 	width = "35",
 	isHovered,
-	color = isHovered ? "#FFFFFF" : "#0C3344",
+	color = isHovered ? "#FFFFFF" : "#111827",
 }): JSX.Element => {
 	return (
 		<svg
