@@ -23,6 +23,8 @@ export default function KulitanGlyphs({
     glyphsObject,
     getImageSrc,
     totalGlyphs,
+    handleGetData,
+    setUserCoordinates,
   } = useHooks();
   const imgSrc = getImageSrc(glyphsObject[selectedGlyphsId]);
   const word = glyphsObject[selectedGlyphsId].word;
@@ -48,6 +50,8 @@ export default function KulitanGlyphs({
           canvasWidth={360}
           canvasHeight={360}
           brushColor="#001C30"
+          disabled={false}
+          brushRadius={9}
         />
       </div>
       <div className="flex justify-between items-center w-full">
@@ -65,7 +69,10 @@ export default function KulitanGlyphs({
         `}
           value="prev"
           disabled={selectedGlyphsId <= 0}
-        ><BackArrow /></button>
+        >
+          <BackArrow />
+        </button>
+
         <button
           onClick={handleClick}
           onMouseDown={() => setOnClick('undo')}
@@ -76,6 +83,7 @@ export default function KulitanGlyphs({
           value="undo"
           suppressHydrationWarning={true}
         >undo</button>
+
         <button
           onClick={handleClick}
           className={`
@@ -84,6 +92,7 @@ export default function KulitanGlyphs({
         `}
           value="glyphs"
         >glyphs</button>
+
         <button
           onClick={handleClick}
           className={`
@@ -92,6 +101,20 @@ export default function KulitanGlyphs({
         `}
           value="guide"
         >guide</button>
+
+        <button
+          onClick={() => {
+            const coordinates = JSON.parse(handleGetData());
+            const mapCoordinates = coordinates.lines.map((c: any) => {
+              return c.points
+            })
+            const mergedCoordinates = [].concat.apply([], mapCoordinates)
+            setUserCoordinates(mergedCoordinates)
+          }}
+          className={`py-1 px-3 rounded-md font-medium text-slate-100`}
+          value="save"
+        >test</button>
+
         <button
           onClick={(e) =>
           {
@@ -106,7 +129,9 @@ export default function KulitanGlyphs({
         `}
           value="next"
           disabled={(selectedGlyphsId + 1) >= totalGlyphs}
-        ><BackArrow /></button>
+        >
+          <BackArrow />
+        </button>
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import baseCoordinates from "./base.json"
 
 import None from "@/shared/images/writing/blank.png";
+
 import Nga from "@/shared/images/writing/nga.png";
 import NgaGuide from "@/shared/images/writing/nga-guide.png";
 import NgaGlyphs from "@/shared/images/writing/nga-glyphs.png";
@@ -18,19 +20,27 @@ type ImageSrc = {
 	glyphs: string;
 	guide: string;
 };
+
 type ImageIndex = {
 	word: string;
 	glyphsGuide: string;
 	glyphs: string;
 	guide: string;
 };
+
 type Image = ImageSrc | ImageIndex;
+
+interface Point {
+	x: number;
+	y: number;
+}
 
 const useHooks = () => {
 	const [onClick, setOnClick] = useState<string>("");
 	const [isGuideOn, setIsGuideOn] = useState<boolean>(true);
 	const [isGlyphsOn, setIsGlyphsOn] = useState<boolean>(true);
 	const canvasRef: any = useRef(null);
+	const [userCoordinates, setUserCoordinates] = useState<Point[]>([]);
 
 	const handleUndo = () => {
 		if (canvasRef.current) {
@@ -68,6 +78,11 @@ const useHooks = () => {
 				handleClear();
 				setOnClick("");
 				break;
+		}
+	};
+	const handleGetData = () => {
+		if (canvasRef.current) {
+			return canvasRef?.current?.getSaveData();
 		}
 	};
 
@@ -111,6 +126,15 @@ const useHooks = () => {
 	];
 	const totalGlyphs = glyphsObject.length;
 
+	useEffect(() => {
+		// console.log(baseCoordinates.length);
+		// console.log(JSON.stringify(convertCoordinates(baseCoordinates)));
+		const g = gradeUserCoordinates(userCoordinates, baseCoordinates, 100);
+		console.log(g);
+		// window.alert(`Score: ${g.percentage}/${g.scoreOverTotal}. \nMessage: ${g.message}`)
+	}, [userCoordinates]);
+
+	// console.log(baseCoordinates);
 	return {
 		onClick,
 		canvasRef,
@@ -124,7 +148,76 @@ const useHooks = () => {
 		getImageSrc,
 		totalGlyphs,
 		getGlyphsIndex,
+		handleGetData,
+		setUserCoordinates,
 	};
 };
 
 export default useHooks;
+
+function convertCoordinates(coordinates: number[][]): Point[] {
+	const convertedData: Point[] = coordinates.map(([x, y]: number[]) => ({
+		x,y,
+	}));
+	return convertedData;
+}
+
+function calculateDistance(point1: Point, point2: Point): number {
+	return Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
+}
+
+function gradeUserCoordinates(
+  userCoordinates: Point[],
+  baseCoordinates: Point[],
+  maxScore: number = 100,
+  coverageThreshold: number = 0.6 
+): {
+  percentage: number;
+  scoreOverTotal: number;
+  message: string;
+} {
+  if (userCoordinates.length === 0 
+		|| userCoordinates.length / baseCoordinates.length < coverageThreshold) {
+    return {
+      percentage: 0,
+      scoreOverTotal: maxScore,
+			message: 'Please follow the guide to draw the Glyphs correctly.'
+    };
+  }
+
+  let totalDistance = 0;
+
+  userCoordinates.forEach((userPoint) => {
+    const nearestReferencePoint = baseCoordinates.reduce(
+      (minPoint, refPoint) => {
+        const distance = calculateDistance(userPoint, refPoint);
+        return distance < calculateDistance(userPoint, minPoint)
+          ? refPoint
+          : minPoint;
+      },
+      baseCoordinates[0],
+    );
+
+    const distance = calculateDistance(userPoint, nearestReferencePoint);
+    totalDistance += distance;
+  });
+
+  const averageDistance = totalDistance / userCoordinates.length;
+  const percentage = Math.ceil((maxScore - averageDistance) / maxScore * 100);
+
+  if (percentage < 50) {
+    return {
+      percentage,
+      scoreOverTotal: maxScore,
+			message: 'Please follow the guide to draw the Glyphs correctly.'
+    };
+  }
+
+	const score = parseFloat(percentage.toFixed(2));
+
+  return {
+    percentage: score > 95 ? maxScore : score,
+    scoreOverTotal: maxScore,
+		message: 'You did it! Congratulations you\'ve learned a new Glyphs!'
+  };
+}
