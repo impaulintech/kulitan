@@ -5,12 +5,17 @@ import { BackArrow } from "@/shared/icons/BackArrow";
 import useHooks from "./hooks";
 
 import CanvasDraw from "react-canvas-draw";
+import { useKulitanContext } from "@/context/kulitan-context";
+import LoadingSpinner from "@/components/atoms/LoadingSpinner";
+import { CloseButton } from "@/shared/icons/CloseButton";
 
 export default function KulitanGlyphs({
   selectedGlyphsId,
-  setSelectedGlyphsId }: {
+  setSelectedGlyphsId,
+  setUserData }: {
     selectedGlyphsId: number;
     setSelectedGlyphsId: (id: number) => void;
+    setUserData: any
   })
 {
   const {
@@ -23,22 +28,70 @@ export default function KulitanGlyphs({
     glyphsObject,
     getImageSrc,
     totalGlyphs,
-    handleGetData,
-    setUserCoordinates,
-  } = useHooks();
+    handleTouchPoint,
+    touchLimit,
+    touchCount,
+    selectedTouchCount,
+    isLoading,
+    toggleModal,
+    setToggleModal,
+    handleRetry,
+    handleContinue,
+    isLastGlyphs,
+    score,
+  } = useHooks({ selectedGlyphsId, setSelectedGlyphsId, setUserData });
+  const { isMobilePhone } = useKulitanContext();
+  const { message, scoreOverTotal, percentage } = score || {};
   const imgSrc = getImageSrc(glyphsObject[selectedGlyphsId]);
   const word = glyphsObject[selectedGlyphsId].word;
-  const prevPage = selectedGlyphsId -1;
-  const nextPage = selectedGlyphsId +1;
+  const prevPage = selectedGlyphsId - 1;
+  const nextPage = selectedGlyphsId + 1;
 
   return (
     <div className="flex flex-col justify-start items-center h-screen gap-5 min-w-[360px] max-w-[600px]">
+
+      {toggleModal && <div className="w-full h-full absolute top-0 left-0 z-50 flex justify-center items-center">
+        <div onClick={() => setToggleModal(false)} className="bg-[#001C30] opacity-75 w-full h-full absolute z-20"></div>
+        <div className="bg-slate-50 min-h-[360px] w-[360px] rounded-lg z-30 relative flex flex-col gap-3 justify-center items-center">
+          <div onClick={() => setToggleModal(false)} className="text-slate-900 absolute top-0 right-0 mr-2 mt-2">
+            <CloseButton />
+          </div>
+          <div className="text-green-600 font-bold text-[60px]">
+            {percentage}/{scoreOverTotal}
+          </div>
+          <div className="text-slate-700 font-bold text-[18px] text-center px-5">
+            {message}
+          </div>
+          <div className="flex items-center justify-center gap-5 mt-5">
+            <button onClick={handleRetry} className="bg-slate-700 py-2 px-5 rounded-md">Retry</button>
+            <button
+              onClick={handleContinue}
+              disabled={isLastGlyphs}
+              className={`bg-green-700 py-2 px-5 rounded-md ${isLastGlyphs && 'opacity-60 cursor-not-allowed'}`}>
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>}
+
       <h1 style={{
         textShadow: "6px 6px 0px rgba(0, 0, 0, 0.25)",
         WebkitTextStroke: "2px black",
         fontWeight: "bold"
       }} className="text-[63px] font-semibold text-stroke text-stroke-black mb-5" >{word}</h1>
-      <div className="w-full flex justify-center items-center min-h-[300px] bg-red-50 rounded-md text-slate-900">
+      <div
+        onTouchEnd={isMobilePhone ? handleTouchPoint : undefined}
+        onMouseUp={!isMobilePhone ? handleTouchPoint : undefined}
+        className="relative w-full flex justify-center items-center min-h-[360px] bg-red-50 rounded-md text-slate-900"
+      >
+        {isLoading && <div className="flex flex-col justify-center items-center absolute z-30 bg-slate-50 w-full h-full">
+          <LoadingSpinner />
+          <h1 className="mt-5 font-medium">Calculating Score...</h1>
+        </div>}
+
+        <span className="absolute text-slate-500 z-20 top-0 left-0 p-5 font-medium">
+          Strokes left: <span className="text-slate-900">{selectedTouchCount - touchCount}</span>
+        </span>
         <CanvasDraw
           lazyRadius={3}
           ref={canvasRef}
@@ -50,7 +103,7 @@ export default function KulitanGlyphs({
           canvasWidth={360}
           canvasHeight={360}
           brushColor="#001C30"
-          disabled={false}
+          disabled={touchLimit}
           brushRadius={9}
         />
       </div>
@@ -101,19 +154,6 @@ export default function KulitanGlyphs({
         `}
           value="guide"
         >guide</button>
-
-        <button
-          onClick={() => {
-            const coordinates = JSON.parse(handleGetData());
-            const mapCoordinates = coordinates.lines.map((c: any) => {
-              return c.points
-            })
-            const mergedCoordinates = [].concat.apply([], mapCoordinates)
-            setUserCoordinates(mergedCoordinates)
-          }}
-          className={`py-1 px-3 rounded-md font-medium text-slate-100`}
-          value="save"
-        >test</button>
 
         <button
           onClick={(e) =>

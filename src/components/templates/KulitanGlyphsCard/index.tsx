@@ -5,11 +5,13 @@ type Props = {
   children: any;
   buttonTitle?: any;
   callBackFn: () => void;
+  hasIcon?: boolean
+  buttonClassName?: string
 };
 
 const KulitanGlyphsCard = (props: Props) =>
 {
-  const { children, buttonTitle, callBackFn } = props;
+  const { children, buttonTitle, callBackFn, hasIcon = true, buttonClassName } = props;
 
   return (
     <div className="flex flex-col items-center justify-center w-full" onClick={callBackFn}>
@@ -18,9 +20,9 @@ const KulitanGlyphsCard = (props: Props) =>
           {children}
         </div>
       </div>
-      <button className="bg-dark w-full flex gap-2 items-center justify-center relative min-h-[20px] rounded-b-md">
+      <button className={`bg-dark w-full flex gap-2 items-center justify-center relative min-h-[20px] rounded-b-md ${buttonClassName}`}>
         <p className="w-full">{buttonTitle}</p>
-        <RightArrow className="absolute right-2" width="15" />
+        { hasIcon && <RightArrow className="absolute right-2" width="15" />}
       </button>
     </div>
   );

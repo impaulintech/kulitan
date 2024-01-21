@@ -100,7 +100,8 @@ const KulitanContextProvider = ({ children }: any) => {
 				setIsKeyboardActive,
 				isReadOnly,
 				setIsReadOnly,
-				scrollY,
+				scrollY, 
+				setIsMobilePhone,
 			}}
 		>
 			{children}

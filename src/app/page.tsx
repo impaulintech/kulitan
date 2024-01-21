@@ -5,8 +5,19 @@ import Card from "@/components/templates/Card";
 import KapampanganFont from "@/shared/images/kapampangan-font.png";
 import KapampanganReading from "@/shared/images/reading.png";
 import KapampanganWriting from "@/shared/images/writing.png";
+import { useLayoutEffect } from "react";
+import Cookies from "universal-cookie";
 
 export default function Home() {
+  const cookies = new Cookies();
+	useLayoutEffect(()=>{
+    const cookieValue = cookies.get('myCookie');
+		if (cookieValue !== undefined) return
+		cookies.set('userData', JSON.stringify({
+			glyphsLearned: []
+		}));
+	}, [])
+
 	return (
 		<main className="min-h-screen min-w-screen flex flex-col items-start justify-start p-9 max-miniPhone:p-5 gap-12">
 			<div className="w-full">
