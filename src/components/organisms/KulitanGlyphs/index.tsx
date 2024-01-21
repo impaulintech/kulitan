@@ -107,7 +107,7 @@ export default function KulitanGlyphs({
           brushRadius={9}
         />
       </div>
-      <div className="flex justify-between items-center w-full">
+      <div className="flex justify-between items-center w-full px-5">
         <button
           onClick={(e) =>
           {

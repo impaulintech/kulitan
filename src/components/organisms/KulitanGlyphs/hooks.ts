@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import Cookies from "universal-cookie";
 
 import None from "@/shared/images/writing/blank.png";
 
@@ -205,7 +204,6 @@ const useHooks = (props: Props) => {
 	const [toggleModal, setToggleModal] = useState<boolean>(false);
 	const [topScore, setTopScore] = useState<any>();
 	const [score, setScore] = useState<any>();
-	const cookies = new Cookies();
 
 	const glyphsObject = [
 		{
@@ -583,14 +581,14 @@ const useHooks = (props: Props) => {
 		setIsLoading(true);
 		setScore(score);
 
-		const getStorageData = cookies.get("userData");
+		const getStorageData = JSON.parse(localStorage.getItem('userData') || '{}');
 
 		if (getStorageData?.length >= 5) {
 			console.log("set Top 3 score list");
 		}
 
 		const updateGlyphsLearned = (newEntry: any) => {
-			const storedData = cookies.get("userData");
+			const storedData = JSON.parse(localStorage.getItem('userData') || '{}');
 			const glyphsLearned = storedData?.glyphsLearned || [];
 
 			const existingIndex = glyphsLearned.findIndex(
@@ -611,7 +609,8 @@ const useHooks = (props: Props) => {
 				topThreeGlyphs = sortedGlyphsLearned.slice(0, 3);
 			}
 
-			cookies.set("userData", { glyphsLearned });
+			
+			localStorage.setItem('userData', JSON.stringify({ glyphsLearned }));
 			setUserData({
 				glyphsLearned,
 				topScore: topThreeGlyphs,
@@ -691,10 +690,10 @@ function gradeUserCoordinates(
 } {
 	if (
 		userCoordinates.length === 0 ||
-		userCoordinates.length / baseCoordinates.length < 0.25
+		userCoordinates.length / baseCoordinates.length < 0.2
 	) {
 		return {
-			percentage: 0,
+			percentage: Math.floor(Math.random() * (50 - 10 + 1) + 10),
 			scoreOverTotal: maxScore,
 			message: "Please follow the guide to draw the Glyphs correctly.",
 		};

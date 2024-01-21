@@ -6,14 +6,13 @@ import KapampanganFont from "@/shared/images/kapampangan-font.png";
 import KapampanganReading from "@/shared/images/reading.png";
 import KapampanganWriting from "@/shared/images/writing.png";
 import { useLayoutEffect } from "react";
-import Cookies from "universal-cookie";
 
 export default function Home() {
-  const cookies = new Cookies();
 	useLayoutEffect(()=>{
-    const cookieValue = cookies.get('myCookie');
-		if (cookieValue !== undefined) return
-		cookies.set('userData', JSON.stringify({
+    const localStorageValue = localStorage.getItem('userData');
+		console.log(!!localStorageValue);
+		if (!!localStorageValue) return
+		localStorage.setItem('userData', JSON.stringify({
 			glyphsLearned: []
 		}));
 	}, [])

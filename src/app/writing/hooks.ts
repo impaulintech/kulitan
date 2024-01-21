@@ -1,27 +1,39 @@
 import { useLayoutEffect, useState } from "react";
-import Cookies from "universal-cookie";
 
 const useWritingHooks = () => {
-  const cookies = new Cookies();
   const [userData, setUserData] = useState<any>()
 
   useLayoutEffect(() => {
-    setUserData(cookies.get('userData'))
+    setUserData(JSON.parse(localStorage.getItem('userData') || '{}'))
+    const storedData = JSON.parse(localStorage.getItem('userData') || '{}');
+    const glyphsLearned = storedData?.glyphsLearned || [];
+
+    let topThreeGlyphs = [];
+    if (storedData?.glyphsLearned.length >= 5) {
+      const sortedGlyphsLearned = storedData.glyphsLearned.sort(
+        (a: any, b: any) => b.score - a.score,
+      );
+      topThreeGlyphs = sortedGlyphsLearned.slice(0, 3);
+
+      setUserData({
+        glyphsLearned,
+        topScore: topThreeGlyphs,
+      });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getData = () => {
-    setUserData(cookies.get('userData'))
-    return cookies.get('userData')
+    setUserData(localStorage.getItem('userData'))
+    return localStorage.getItem('userData')
   }
 
   const writeData = (newData: any) => {
-    cookies.set('userData', JSON.stringify(newData));
+		localStorage.setItem('userData', JSON.stringify(JSON.stringify(newData)));
     setUserData(newData)
   }
   
   return {
-    cookies,
     writeData,
     getData,
     userData, 
