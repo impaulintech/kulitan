@@ -3,6 +3,7 @@ import { Add } from "@/shared/icons/Add";
 import { BackSpace } from "@/shared/icons/BackSpace";
 import { DeleteAll } from "@/shared/icons/DeleteAll";
 import { NewLine } from "@/shared/icons/NewLine";
+import { Space } from "@/shared/icons/Space";
 import React, { useEffect, useState } from "react";
 
 type Props = {
@@ -52,11 +53,16 @@ const KulitanKeyAction = (props: Props) => {
 		keyFunction();
 	};
 
+	const onDoubleClickAction = () => {
+		console.log('doubleclick');
+	};
+
 	const actionComponentMap: any = {
 		delete: <DeleteAll isHovered={isKeyClicked} />,
 		add: <Add isHovered={isKeyClicked} />,
 		backSpace: <BackSpace isHovered={isKeyClicked} />,
 		newLine: <NewLine isHovered={isKeyClicked} />,
+		space: <Space isHovered={isKeyClicked} />,
 	};
 
 	return (
@@ -68,7 +74,7 @@ const KulitanKeyAction = (props: Props) => {
 			onTouchEnd={() => isMobilePhone && onTouchUp()}
 			className="relative flex flex-col items-center justify-center"
 		>
-			<button
+			<button 
 				className={`${isKeyClicked && "bg-slate-900"}
 					h-[57px] w-[74px] flex justify-center items-center text-dark font-bold 
 					text-[12px] relative z-50 rounded-md

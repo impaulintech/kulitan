@@ -176,7 +176,7 @@ export default function Transcribe() {
 					<TransparentCard className="z-10">
 						<textarea
 							ref={textareaRef}
-							className="z-10 text-light bg-transparent resize-y w-full min-h-[96px] outline-0"
+							className="z-10 text-light bg-transparent resize-y w-full min-h-[96px] outline-0 text-[21px]"
 							name="postContent"
 							spellCheck="false"
 							rows={3}
@@ -184,6 +184,7 @@ export default function Transcribe() {
 							onChange={normalWordChange}
 							onClick={trackCursor}
 							readOnly={isReadOnly}
+							autoFocus
 						/>
 					</TransparentCard>
 					<TransparentCard className="flex justify-end items-end">
@@ -216,7 +217,7 @@ export default function Transcribe() {
 							<div
 								id="kulitan-text"
 								onInput={kulitanWordChange}
-								className="kulitan-class text-white text-[21px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
+								className="kulitan-class text-white text-[30px] outline-none flex flex-row-reverse font-kulitan text-center gap-2"
 								spellCheck="false"
 								dangerouslySetInnerHTML={{
 									__html: delatinizeVowels(kulitanWords.replace(/\s/g, "<br>")),
@@ -235,6 +236,7 @@ export default function Transcribe() {
 						"
 					></div>
 				</div>
+				
 				<KulitanKeyboard textareaRef={textareaRef}>
 					{kulitanKeys.map((key, index) => {
 						const { mainKey, subKeyOne, subKeyTwo, subKeyThree } = key;

@@ -5,8 +5,17 @@ import Card from "@/components/templates/Card";
 import KapampanganFont from "@/shared/images/kapampangan-font.png";
 import KapampanganReading from "@/shared/images/reading.png";
 import KapampanganWriting from "@/shared/images/writing.png";
+import { useLayoutEffect } from "react";
 
 export default function Home() {
+	useLayoutEffect(()=>{
+    const localStorageValue = localStorage.getItem('userData');
+		if (!!localStorageValue) return
+		localStorage.setItem('userData', JSON.stringify({
+			glyphsLearned: []
+		}));
+	}, [])
+
 	return (
 		<main className="min-h-screen min-w-screen flex flex-col items-start justify-start p-9 max-miniPhone:p-5 gap-12">
 			<div className="w-full">

@@ -13,7 +13,8 @@ type Props = {
 	textareaRef: any;
 };
 
-const KulitanKeyboard = (props: Props) => {
+const KulitanKeyboard = (props: Props) =>
+{
 	const { children, textareaRef } = props;
 
 	const {
@@ -30,22 +31,25 @@ const KulitanKeyboard = (props: Props) => {
 		setIsReadOnly,
 	} = useKulitanContext();
 
-	const deleteAction = (e: any) => {
+	const deleteAction = (e: any) =>
+	{
 		setIsReadOnly(true);
 		setKulitanWords("");
 	};
 
-	const addAction = (e: any) => {
+	const addAction = (e: any) =>
+	{
 		setIsReadOnly(true);
 		if (isAddActionClicked) return;
 		setIsAddActionClicked(true);
-		if (textareaRef.current) {
+		if (textareaRef.current)
+		{
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
 			const leftString = currentText.slice(0, cursorPosition);
 			const lastChar = leftString.trim().slice(-1);
 
-			const characterMap: { [key: string]: string } = {
+			const characterMap: { [key: string]: string; } = {
 				a: "a",
 				u: "u",
 				i: "i",
@@ -54,14 +58,15 @@ const KulitanKeyboard = (props: Props) => {
 			const newLeftString =
 				lastChar in characterMap
 					? leftString.slice(0, cursorPosition - 1) +
-					  characterMap[lastChar] +
-					  " "
+					characterMap[lastChar] +
+					" "
 					: leftString;
 
 			const newText = newLeftString + currentText.slice(cursorPosition);
 
 			const newPosition = newLeftString.length;
-			setTimeout(() => {
+			setTimeout(() =>
+			{
 				textareaRef.current.setSelectionRange(newPosition - 1, newPosition - 1);
 			}, 1);
 
@@ -69,9 +74,11 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
-	const backSpaceAction = (e: any) => {
+	const backSpaceAction = (e: any) =>
+	{
 		setIsReadOnly(true);
-		if (textareaRef.current) {
+		if (textareaRef.current)
+		{
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
 
@@ -91,9 +98,36 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
-	const newLineAction = (e: any) => {
+	const addSpaceAction = (e: any) =>
+	{
 		setIsReadOnly(true);
-		if (textareaRef.current) {
+		if (textareaRef.current)
+		{
+			const cursorPosition = textareaRef.current.selectionStart;
+			const currentText = textareaRef.current.value;
+
+			const addWhiteSpace =
+				currentText.slice(0, cursorPosition) +
+				" " + currentText.slice(cursorPosition);
+
+			textareaRef.current.value = addWhiteSpace;
+			setTimeout(() =>
+			{
+				textareaRef.current.setSelectionRange(
+					cursorPosition + 1,
+					cursorPosition + 1,
+				);
+			}, 1);
+
+			setKulitanWords(denormalizeWords(addWhiteSpace));
+		}
+	};
+
+	const newLineAction = (e: any) =>
+	{
+		setIsReadOnly(true);
+		if (textareaRef.current)
+		{
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
 
@@ -104,7 +138,8 @@ const KulitanKeyboard = (props: Props) => {
 				"</div>";
 
 			textareaRef.current.value = newText;
-			setTimeout(() => {
+			setTimeout(() =>
+			{
 				textareaRef.current.setSelectionRange(
 					cursorPosition + 1,
 					cursorPosition + 1,
@@ -115,45 +150,55 @@ const KulitanKeyboard = (props: Props) => {
 		}
 	};
 
-	const copyKulitanWords = async () => {
+	const copyKulitanWords = async () =>
+	{
 		const divToCopy: any = document.querySelector(".copy-div-element");
 
-		if (!divToCopy) {
+		if (!divToCopy)
+		{
 			console.error("Element not found.");
 			return;
 		}
 
-		try {
+		try
+		{
 			const canvas = await html2canvas(divToCopy);
 
 			// Convert the canvas to a blob
-			canvas.toBlob(async (blob) => {
-				if (blob) {
+			canvas.toBlob(async (blob) =>
+			{
+				if (blob)
+				{
 					// Create a new ClipboardItem and copy it to the clipboard
 					const clipboardItem = new ClipboardItem({ "image/png": blob });
 					await navigator.clipboard.write([clipboardItem]);
 
 					alert("Image copied successfully.");
-				} else {
+				} else
+				{
 					alert("Failed to copy image.");
 				}
 			}, "image/png");
-		} catch (error: any) {
+		} catch (error: any)
+		{
 			alert("Error capturing and copying image:");
 		}
 	};
 
-	const captureOverflowDivAsImage = async () => {
+	const captureOverflowDivAsImage = async () =>
+	{
 		const divToCapture: any = document.querySelector(".copy-div-element");
 
-		if (!divToCapture) {
+		if (!divToCapture)
+		{
 			console.error("Element not found.");
 			return;
 		}
 
 		divToCapture.scrollTop = divToCapture.scrollHeight;
 
-		try {
+		try
+		{
 			const canvas = await html2canvas(divToCapture, {
 				scrollX: 0,
 				scrollY: -window.scrollY,
@@ -167,7 +212,8 @@ const KulitanKeyboard = (props: Props) => {
 			link.click();
 
 			console.log("Overflow content saved as image.");
-		} catch (error) {
+		} catch (error)
+		{
 			console.error(
 				"Error capturing and saving overflow content as image:",
 				error,
@@ -180,7 +226,8 @@ const KulitanKeyboard = (props: Props) => {
 			<div className="h-[30px] bg-dark w-full bottom-[275px] z-30 flex gap-2 justify-between items-center pl-6">
 				<div
 					className="flex gap-2"
-					onClick={(e: any) => {
+					onClick={(e: any) =>
+					{
 						e.preventDefault();
 						setIsReadOnly(true);
 						setIsAutoCorrect(!isAutoCorrect);
@@ -188,42 +235,38 @@ const KulitanKeyboard = (props: Props) => {
 				>
 					<Switch
 						checked={isAutoCorrect}
-						className={`${
-							isAutoCorrect
+						className={`${isAutoCorrect
 								? "bg-[rgba(255,255,255,90%)]"
 								: "bg-[rgba(217,217,217,30%)]"
-						} relative inline-flex h-4 w-10 items-center rounded-full`}
+							} relative inline-flex h-4 w-10 items-center rounded-full`}
 					>
 						<span
-							className={`${
-								isAutoCorrect ? "translate-x-6" : "translate-x-1"
-							} inline-block h-3 w-3 transform rounded-full bg-[#57BB47] transition`}
+							className={`${isAutoCorrect ? "translate-x-6" : "translate-x-1"
+								} inline-block h-3 w-3 transform rounded-full bg-[#57BB47] transition`}
 						/>
 					</Switch>
 					<span className="text-[12px]">Auto format</span>
 				</div>
 				<div className="flex">
 					<button
-						className={`${
-							isMobilePhone && "hidden"
-						} mr-6 flex gap-2 select-none`}
+						className={`${isMobilePhone && "hidden"
+							} mr-6 flex gap-2 select-none`}
 						onClick={captureOverflowDivAsImage}
 					>
 						<Download />
 					</button>
 					<button
-						className={`${
-							isMobilePhone && "hidden"
-						} mr-6 flex gap-2 select-none`}
+						className={`${isMobilePhone && "hidden"
+							} mr-6 flex gap-2 select-none`}
 						onClick={copyKulitanWords}
 					>
 						<Copy />
 					</button>
 					<button
-						className={`mr-6 ${
-							isKeyboardActive ? "-rotate-90" : "rotate-90"
-						} select-none`}
-						onClick={(e: any) => {
+						className={`mr-6 ${isKeyboardActive ? "-rotate-90" : "rotate-90"
+							} select-none`}
+						onClick={(e: any) =>
+						{
 							e.preventDefault();
 							setIsReadOnly(!isKeyboardActive);
 							setIsKeyboardActive(!isKeyboardActive);
@@ -236,21 +279,22 @@ const KulitanKeyboard = (props: Props) => {
 			<div
 				className={`
 					left-0 bottom-0 min-h-[275px] w-full bg-[rgba(12,51,68,60%)] z-50
-                    justify-center items-center 
+					justify-center items-center 
 					${isKeyboardActive ? "flex" : "hidden"}
-                `}
+				`}
 			>
 				<div className="flex justify-start items-start max-w-[414px]">
 					<div className="flex flex-wrap justify-center items-start gap-2 pl-2 min-miniPhone:h-[275px]">
 						{children}
 					</div>
-					<div className="w-[74px] h-[275px] pr-2 z-50 flex flex-col gap-2">
+					<div className="w-[74px] h-[330px] pr-2 z-50 flex flex-col gap-2">
 						<KulitanKeyAction action="delete" keyFunction={deleteAction} />
 						<KulitanKeyAction action="add" keyFunction={addAction} />
 						<KulitanKeyAction
 							action="backSpace"
 							keyFunction={backSpaceAction}
 						/>
+						<KulitanKeyAction action="space" keyFunction={addSpaceAction} />
 						<KulitanKeyAction action="newLine" keyFunction={newLineAction} />
 					</div>
 				</div>

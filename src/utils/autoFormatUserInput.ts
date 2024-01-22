@@ -5,6 +5,7 @@ import denormalizeWords from "@/utils/denormalizeWords";
 import correctInput from "@/utils/correctInput";
 import latinizeVowels from "@/utils/latinizeVowels";
 import replaceMatchingKeys from "./replaceMatchingKeys";
+import localKulitanLibrary from "@/shared/lib/kulitanLibrary.json";
 
 export default function autoFormatUserInput(
 	textareaValue: any,
