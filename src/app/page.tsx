@@ -10,7 +10,6 @@ import { useLayoutEffect } from "react";
 export default function Home() {
 	useLayoutEffect(()=>{
     const localStorageValue = localStorage.getItem('userData');
-		console.log(!!localStorageValue);
 		if (!!localStorageValue) return
 		localStorage.setItem('userData', JSON.stringify({
 			glyphsLearned: []

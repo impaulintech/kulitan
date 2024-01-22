@@ -581,12 +581,6 @@ const useHooks = (props: Props) => {
 		setIsLoading(true);
 		setScore(score);
 
-		const getStorageData = JSON.parse(localStorage.getItem('userData') || '{}');
-
-		if (getStorageData?.length >= 5) {
-			console.log("set Top 3 score list");
-		}
-
 		const updateGlyphsLearned = (newEntry: any) => {
 			const storedData = JSON.parse(localStorage.getItem('userData') || '{}');
 			const glyphsLearned = storedData?.glyphsLearned || [];
