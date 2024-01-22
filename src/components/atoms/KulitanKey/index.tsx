@@ -52,11 +52,11 @@ const KulitanKey = (props: Props) => {
 			setIsAddActionClicked(false);
 			const cursorPosition = textareaRef.current.selectionStart;
 			const currentText = textareaRef.current.value;
-			const buttonContentValue = buttonContent + "<br>";
+			// const buttonContentValue = buttonContent + "<br>";
 
 			const newText =
 				currentText.slice(0, cursorPosition) +
-				buttonContentValue +
+				buttonContent
 				currentText.slice(cursorPosition);
 
 			const newCursorPosition = cursorPosition + (buttonContent.length + 1);
